@@ -43,3 +43,19 @@ The second most complaining issue is the unequal contribution in the group, whic
 <div style="page-break-after: always"></div>
 
 ## Proposal III
+***Social platform for resaerch academia***
+### Problem statement & motivation:
+Research experience is important to both further career and skill development for undergraduate students. However, securing research opportunities is a big challenge as well. One of the most common ways for undergraduate students to engage in research is by volunteering to work with a faculty on one of their projects. Currently, the information for the research, including the introduction or contact information is distributed everywhere, which students might hardly collect. Sending an email is one popular method used for self-introduction, which might have low efficiency. That might also be massive for a faculty to receive a lot of emails every day. A platform for collecting and organizing information for both faculty and students would be beneficial for everyone.
+### User Problem
+- We aim improve the experience of securing research opportunity by creating a platform that both faculty and students can easier get the information they need.
+### Basic Design
+- We plan to have a platform where each user would display basic information: students would include their basic skills, school year, research interest, and past experience, and faculty would provide their current projects and their research interests. Each user could be interested and volunteer to be a faculty and the platform would send their basic information to the faculty. The faculty could filter or sort students' information to find the students they need for their project. The information is more organized and the communication would be more efficient, we can consider this as an academic version Linkin platform. 
+#### Frontend
+- We are planning to use ***React*** as our main Frontend framework
+#### Backend
+- We are planning to use PostmanAPI and MongoDB for the backend database and interactions. 
+### Other applications
+#### Existing Apps
+- Currently, different faculty would have their own website for their research. Some of them use the survey to collect students' information. Also, students would get an email with information about research opportunities. 
+#### How are we different
+- The main difference between our project is that we would organize the information in one place with a clearer structure so that people can easier get the information they want. 

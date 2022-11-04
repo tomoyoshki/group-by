@@ -18,9 +18,22 @@ Yutong Zhang - yutongz7
 - To form a group, many often used the course communication platform such as Campuswire, Discord, Piazza to search for teammates. There are, of course, other similar app like CatMe made by Purdue University.
 #### How are we different
 - We are different. Because we are implementing a Two side matching software that maximizes the freedom of the user with enough informatino for the both parties. Campuswire, Discord, etc, often have one user requesting for a group, and then many individuals or groups reply, or one group requesting a few more users, and a few individuals reply. We provide a mean in both direction, providing maximum freedom and transparency between any existing groups and the individuals. Inidivduals could see which groups need more people, or any other individual also looking for a group.
-----
+------
 <div style="page-break-after: always"></div>
 ## Proposal II
 ***Group Collaboration Platform***
 ### Problem statement & motivation:
-The second most complaining issue is the unequal contribution in the group, which would decrease the effectiveness of group assignments. Therefore, considering the potential advantages of group assignments, we’d like to develop a collaboration platform to increase the efficiency of group matching and the user experience of group assignments.
+The second most complaining issue is the unequal contribution in the group, which would decrease the effectiveness of group assignments. Therefore, considering the potential advantages of group assignments, we’d like to develop a collaboration platform to improve the user experience of group assignments by quantifying and visualizing the team contribution for evaluation. This allows both the team members to evaluate their performance based on their contribution, and also allows any regulator or the instructor to measure the group's works distribution.
+### User Problem
+- Essentially, we are trying to address the unequal distribution of work among the students in any group assignments, by creating a web app platform for any group and the instructor to keep updating their contribution, and eventually quantifies and visualizes the contributions. 
+### Basic Design
+- We plan to implement a timeline management model that keeps track of the users' uploaded contribution for a created project. The users have to be authenticated to be added to a group, and then uploaded their contribution to the database. Then, there is a dashboard to keep track of each others performance, and visualizes their contributions for evaluation. 
+#### Frontend
+- We are planning to use ***React*** as our main Frontend framework
+#### Backend
+- We are planning to use PostmanAPI and MongoDB for the backend database and interactions. 
+### Other applications
+#### Existing Apps
+- There are many apps that have similar features like this. Git is one, with milestones, tags, commit from each users. 
+#### How are we different
+- The main difference between our project is that we have provided visualization for each contribution. This also provides meaningful metrics to the reporter, and would demonstrate how they have contributed.

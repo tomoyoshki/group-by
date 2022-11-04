@@ -20,6 +20,7 @@ Yutong Zhang - yutongz7
 - We are different. Because we are implementing a Two side matching software that maximizes the freedom of the user with enough informatino for the both parties. Campuswire, Discord, etc, often have one user requesting for a group, and then many individuals or groups reply, or one group requesting a few more users, and a few individuals reply. We provide a mean in both direction, providing maximum freedom and transparency between any existing groups and the individuals. Inidivduals could see which groups need more people, or any other individual also looking for a group.
 ------
 <div style="page-break-after: always"></div>
+
 ## Proposal II
 ***Group Collaboration Platform***
 ### Problem statement & motivation:

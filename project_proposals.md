@@ -1,6 +1,7 @@
 # CS 409 Final Project Proposal
-Tomoyoshi (Tommy) Kimura - tkimur4
-Yutong Zhang - yutongz7
+**Group Name:** ***HAN***
+***Tomoyoshi (Tommy) Kimura - tkimura4***
+***Yutong Zhang - yutongz7***
 ## Proposal I
 ***Group Formation Platform***
 ### Problem statement & motivation:
@@ -38,10 +39,7 @@ The second most complaining issue is the unequal contribution in the group, whic
 - There are many apps that have similar features like this. Git is one, with milestones, tags, commit from each users. 
 #### How are we different
 - The main difference between our project is that we have provided visualization for each contribution. This also provides meaningful metrics to the reporter, and would demonstrate how they have contributed.
-
 ------
-<div style="page-break-after: always"></div>
-
 ## Proposal III
 ***Social platform for resaerch academia***
 ### Problem statement & motivation:

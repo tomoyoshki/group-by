@@ -3,7 +3,6 @@ var mongoose = require('mongoose');
 
 // Define our user schema
 var UserSchema = new mongoose.Schema({
-    user_id: String,
     email: {
         type: String,
         required: true
@@ -15,10 +14,6 @@ var UserSchema = new mongoose.Schema({
     role: {
         type: String,
         required: true
-    },
-    skills: {
-        type: [String],
-        default: []
     },
     unmatched_assignment_ids: {
         type: [String], 

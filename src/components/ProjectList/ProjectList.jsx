@@ -7,7 +7,9 @@ import axios from "axios"
 
 export default function ProjectList({user_matched, user_unmatched}) {
     const nav = useNavigate()
-    const [matched_team, setMatchedTeam] = useState([])
+    const [matched_team, setMatchedTeam] = useState([{
+        name: "some matched project 1"
+    }])
     const [unmatched_team, setUnmatchedTeam] = useState([])
     const instructor_style = getRole() === "instructor" ? {
         "width": "90vw",
@@ -18,7 +20,6 @@ export default function ProjectList({user_matched, user_unmatched}) {
 
     const handleClick = (e) => {
         removeToken()
-        console.log("Going to login")
         nav('/login')
     }
 
@@ -39,9 +40,18 @@ export default function ProjectList({user_matched, user_unmatched}) {
                 return
             }
 
+            var local_unmatched = []
+            var local_matched = []
             res.data.data.forEach(element => {
-                console.log(element)                
+                if (unmatched_set.has(element._id)) {
+                    local_unmatched.push(element)
+                } else if (matched_set.has(element._id)) {
+                    local_matched.push(element)
+                }
             });
+
+            setMatchedTeam(local_matched)
+            setUnmatchedTeam(local_unmatched)
 
         } catch(e) {
             console.log(e)
@@ -60,15 +70,21 @@ export default function ProjectList({user_matched, user_unmatched}) {
             <div className="project_section">
                 {getRole().role === "student" ? <h2>Unmatched Projects</h2> : <h2>Projects</h2>}
                 <div className="project_table">
-                    <Project name={"CS 409 Final Project"} matched={false} />
-                    <Project name={"CS 425 MP Partners"} matched={false} />
-                    <Project name={"CS 225 Final Projeect"} matched={false} />
+                {
+                    unmatched_team.map((element) => {
+                        return <Project name={element.name} matched={false} assignment={element} />
+                    })
+                }
                 </div>
             </div>
             <div className="project_section">
                 {getRole().role === "student" ? <h2>Matched Projects</h2> : <></>}
                 <div className="project_table">
-                    <Project name={"CS 498 Final Project"} matched={true} />
+                {
+                    matched_team.map((element) => {
+                        return <Project name={element.name} matched={false} assignment={element} />
+                    })
+                }
                 </div>
             </div>
         </div>

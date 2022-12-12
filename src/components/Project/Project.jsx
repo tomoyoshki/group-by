@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
 import './Project.scss'
-export default function Project({name, matched}) {
+export default function Project({name, matched, element}) {
     return (
-        <Link className="project_row" to="/project1">
+        <Link className="project_row" to={`/${element._id}`}>
             <div className="project_image"></div>
             <div className='project_title'>
                 <div className='title'>{name}</div>

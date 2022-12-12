@@ -45,9 +45,9 @@ module.exports = function (router) {
 
             // when teams not found
             if (teams == null || teams.length == 0) {
-                res.status(404)
+                res.status(200)
                 var response = {
-                    message: "GET: 404 not found",
+                    message: "no team found",
                     data: {}
                 }
                 res.send(response)
@@ -110,7 +110,7 @@ module.exports = function (router) {
                 let cur_user = await User.findOne({_id: cur_user_id}, {}).catch(err => {})
                 // delete from unmatched_assignment_ids
                 if (cur_user.unmatched_assignment_ids.includes(teams.assignment_id)) {
-                    let cur_id_index = cur_user.unmatched_assignment_ids.indexOf(team.assignment_id)
+                    let cur_id_index = cur_user.unmatched_assignment_ids.indexOf(teams.assignment_id)
                     cur_user.unmatched_assignment_ids.splice(cur_id_index, 1)
                 }
                 // add to matched_assignment_ids
@@ -122,7 +122,7 @@ module.exports = function (router) {
                 // update IndividualAssignmentInfo
                 let cur_info = await individualAssignmentInfo.findOne({assignment_id: teams.assignment_id, user_id: cur_user_id}, {}).catch(err => {})
                 cur_info.matched = true
-                cur_info.team_id = req.params.id
+                cur_info.team_id = teams._id
                 await cur_info.save().catch(err => {})
             });
 

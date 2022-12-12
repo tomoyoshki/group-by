@@ -267,14 +267,14 @@ module.exports = function (router) {
             }
 
             // update request
-            let cur_get_user = await User.findOne({id: request.user_get_request}, {}).catch(err => {})
+            let cur_get_user = await User.findOne({_id: request.user_get_request}, {}).catch(err => {})
             if (cur_get_user.recevied_request_ids.includes(request.user_get_request)) {
                 let cur_id_index = cur_get_user.recevied_request_ids.indexOf(request.user_get_request)
                 cur_get_user.recevied_request_ids.splice(cur_id_index, 1)
             }
             await cur_get_user.save().catch(err => {})
 
-            let cur_send_user = await User.findOne({id: request.user_send_request}, {}).catch(err => {})
+            let cur_send_user = await User.findOne({_id: request.user_send_request}, {}).catch(err => {})
             if (cur_send_user.sent_request_ids.includes(request.user_send_request)) {
                 let cur_id_index = cur_send_user.sent_request_ids.indexOf(request.user_send_request)
                 cur_send_user.sent_request_ids.splice(cur_id_index, 1)

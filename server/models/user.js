@@ -34,6 +34,10 @@ var UserSchema = new mongoose.Schema({
     joined_team_ids: {
         type: [String],
         default: []
+    },
+    created_assignment_ids: {
+        type: [String], 
+        default: []
     }
 });
 

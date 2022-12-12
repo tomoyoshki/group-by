@@ -6,6 +6,7 @@ var AssignmentSchema = new mongoose.Schema({
     start_date: Date,
     end_date: Date,
     join_code: String,
+    instructor_id: String,
     assignment_name: String,
     team_ids: {type: [String], default: []},
     user_ids: {type: [String], default: []}

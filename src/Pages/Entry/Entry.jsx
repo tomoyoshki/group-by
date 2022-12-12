@@ -7,7 +7,7 @@ import NotFound from '../NotFound/NotFound';
 import SignUp from '../Signup/SignUp';
 import Login from '../Login/Login';
 import ProjectBoard from '../ProjectBoard/ProjectBoard';
-
+import AddProject from '../AddProject/AddProject'
 
 function Entry() {
     return (
@@ -20,6 +20,7 @@ function Entry() {
                     <Route path='/application' element={<Application />} />
                     <Route path='/login' element={<Login />} />
                     <Route path='/signup' element={<SignUp />} />
+                    <Route path='/addproject' element={<AddProject />} />
                     <Route path='*' element={<NotFound />} />
                 </Routes>
             </Router>

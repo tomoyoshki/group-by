@@ -45,6 +45,18 @@
 
         border-bottom: 1px solid #e2d8d8;;
     }
+
+    .add_project {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        font-size: 25px;
+        // border: 1px solid black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: 600;
+    }
 }
 
 

@@ -1,9 +1,13 @@
 import "./ProjectList.scss"
 import Project from "../Project/Project"
+import { Link } from "react-router-dom"
 
 export default function ProjectList() {
     return (
         <div className="project_list">
+            <div className="add_project">
+                <Link to="/addproject">Button</Link>
+            </div>
             <div className="project_section">
                 <h2>Unmatched Projects</h2>
                 <div className="project_table">

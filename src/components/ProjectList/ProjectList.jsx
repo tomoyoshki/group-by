@@ -1,16 +1,18 @@
 import "./ProjectList.scss"
 import Project from "../Project/Project"
 import { Link, useNavigate } from "react-router-dom"
-import { getRole, removeToken } from "../../utils/useToken"
+import { getRole, getToken, removeToken } from "../../utils/useToken"
 import { useState, useEffect } from "react"
 import axios from "axios"
+import { convertToObject } from "typescript"
 
-export default function ProjectList({user_matched, user_unmatched}) {
+export default function ProjectList() {
     const nav = useNavigate()
-    const [matched_team, setMatchedTeam] = useState([{
-        name: "some matched project 1"
-    }])
+    const [user_matched, setUserMatched] = useState([])
+    const [user_unmatched, setUserUnMatched] = useState([])
+    const [matched_team, setMatchedTeam] = useState([])
     const [unmatched_team, setUnmatchedTeam] = useState([])
+    const [created_team, setCreatedTeam] = useState([])
     const instructor_style = getRole() === "instructor" ? {
         "width": "90vw",
         "position": "relative"
@@ -24,6 +26,25 @@ export default function ProjectList({user_matched, user_unmatched}) {
     }
 
     const getTeams = async () => {
+        try {
+            const params = {
+                _id: getToken(),
+            };
+
+            const res = await axios.get("http://localhost:4000/api/users", {params: {
+                where : JSON.stringify(params)
+            }});
+
+            if (res.status === 404) {
+                nav("/login")
+            }
+
+            const user_data = res.data.data[0]
+            setUserMatched(user_data.matched_assignment_ids)
+            setUserUnMatched(user_data.unmatched_assignment_ids)
+        } catch(e) {
+            console.log(e)
+        }
         var matched_set = new Set(user_matched);
         var unmatched_set = new Set(user_unmatched);
         try {
@@ -39,6 +60,8 @@ export default function ProjectList({user_matched, user_unmatched}) {
                 setUnmatchedTeam([])
                 return
             }
+
+            console.log("Get Assignments result: ", res)
 
             var local_unmatched = []
             var local_matched = []
@@ -58,35 +81,93 @@ export default function ProjectList({user_matched, user_unmatched}) {
         }
     }
 
+    const getInstructorTeams = async () => {
+        try {
+            const params = {
+                instructor_id: getToken()
+            }
+            const res = await axios.get("http://localhost:4000/api/assignments", {params: {
+                where: JSON.stringify(params)
+            }});
+
+            if (res.status === 404) {
+                console.log("Failed to find teams")
+                return null
+            }
+
+            if (res.data.data.length === 0) {
+                setCreatedTeam([])
+                return
+            }
+
+            setCreatedTeam(res.data.data)
+
+        } catch(e) {
+            console.log(e)
+        }
+    }
+
     useEffect(()=> {
-        getTeams()
+        // getToken() === "student" ? getTeams() : getInstructorTeams()
+        getInstructorTeams()
     }, [])
+
+    useEffect(()=> {
+        console.log("Use effect: ", created_team)
+    }, [created_team])
+
+    const student_project_section = () => {
+        return (
+            <>
+                <div className="project_section">
+                <h2>Unmatched Projects</h2>
+                    <div className="project_table">
+                    {
+                        unmatched_team.map((element, i) => {
+                            return <Project key={i} name={element.name} matched={false} assignment={element}/>
+                        })
+                    }
+                    </div>
+                </div>
+                <div className="project_section">
+                    <h2>Matched Projects</h2>
+                    <div className="project_table">
+                    {
+                        matched_team.map((element, i) => {
+                            return <Project key={i} name={element.name} matched={false} assignment={element} />
+                        })
+                    }
+                    </div>
+                </div>
+            </>
+        )
+    }
+
+    const instructor_project_section = () => {
+        return (
+            <>
+                <div className="project_section">
+                    <h2>Projects</h2>
+                    <div className="project_table">
+                    {
+                        created_team.map((element, i) => {
+                            console.log(element)
+                            return <Project key={i} name={element.assignment_name} matched={false} assignment={element}/>
+                        })
+                    }
+                    </div>
+                </div>
+            </>
+        )
+    }
+
     return (
         <div className="project_list" style={instructor_style}>
             <div className="add_project">
             <Link to="/addproject" className="add_project_button">+ Add</Link>
             { getRole() === "instructor" ? <span to="/addproject" className="add_project_button" onClick={handleClick}>Sign out</span> : <></>}
             </div>
-            <div className="project_section">
-                {getRole().role === "student" ? <h2>Unmatched Projects</h2> : <h2>Projects</h2>}
-                <div className="project_table">
-                {
-                    unmatched_team.map((element) => {
-                        return <Project name={element.name} matched={false} assignment={element} />
-                    })
-                }
-                </div>
-            </div>
-            <div className="project_section">
-                {getRole().role === "student" ? <h2>Matched Projects</h2> : <></>}
-                <div className="project_table">
-                {
-                    matched_team.map((element) => {
-                        return <Project name={element.name} matched={false} assignment={element} />
-                    })
-                }
-                </div>
-            </div>
+            {getRole() === "instructor" ? instructor_project_section() : student_project_section()}
         </div>
     )
 }

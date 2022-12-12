@@ -15,7 +15,7 @@ module.exports = function (router) {
             let parsed_url = url.parse(req.url)
             let parsed_queryString = querystring.parse(parsed_url.query)
 
-            console.log(parsed_queryString.where)
+            console.log("Info get: ", parsed_queryString.where)
             let where = parsed_queryString.where ? JSON.parse(parsed_queryString.where) : {}
             let sort = parsed_queryString.sort ? JSON.parse(parsed_queryString.sort) : {}
             let select = parsed_queryString.select ? JSON.parse(parsed_queryString.select): {}
@@ -77,9 +77,9 @@ module.exports = function (router) {
 
         // post
         infosRoute.post(async function(req, res) {
-            
-        // try {
+        try {
             // Infos cannot be created (or updated) without assignment_id and user_id
+            console.log(req)
             if (req.body.assignment_id == null || req.body.assignment_id.length == 0 || req.body.user_id == null || req.body.user_id.length == 0) {
                 res.status(404)
                 var response = {
@@ -125,16 +125,16 @@ module.exports = function (router) {
             res.status(201)
             res.send(response)
             return
-        // } catch(err) {
-        //     // catch server error
-        //     res.status(500)
-        //     var response = {
-        //         message: "POST: 500 server error",
-        //         data: {}
-        //     }
-        //     res.send(response)
-        //     return
-        // }
+        } catch(err) {
+            // catch server error
+            res.status(500)
+            var response = {
+                message: "POST: 500 server error",
+                data: {}
+            }
+            res.send(response)
+            return
+        }
     });
 
     // Endpoints: infos/:id

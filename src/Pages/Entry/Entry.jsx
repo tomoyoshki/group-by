@@ -14,11 +14,11 @@ function Entry() {
     const [allProjects, setAllProjects] = useState([])
     const getData = async () => {
         try {
-            const url = "https://pokeapi.co/api/v2/pokemon/?offset=0&limit=1200"
+            const url = "http://localhost:4000/api/assignments"
             const res = await axios.get(url);
             // get all course information
-            const data = res.data.results
-            setAllProjects(allProjects)
+            const data = res.data.data
+            setAllProjects(data)
         } catch(e) {
             console.log(e)
         }
@@ -39,7 +39,8 @@ function Entry() {
                     <Route path='/addproject' element={<AddProject />} />
                     {
                         allProjects.map((element) => {
-                            return <Route key={element.id} path={"/projects/" + element.id.toString()} element={<ProjectBoard project_title={element.title} />} />
+                            console.log("map: ", element)
+                            return <Route key={element._id} path={"/projects/" + element._id} element={<ProjectBoard project={element} />} />
                         })
                     }
                     <Route path='*' element={<NotFound />} />

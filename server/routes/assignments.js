@@ -83,14 +83,14 @@ module.exports = function (router) {
             res.send(response)
             return
         }
-        });
+    });
 
         // post
-        assignmentsRoute.post(async function(req, res) {
+    assignmentsRoute.post(async function(req, res) {
             
-        // try {
+        try {
             // Assignments cannot be created (or updated) without assignments, start_date and end_date
-            if (req.body.instructor_id == null || req.body.instructor_id.length == 0 || req.body.start_date == null || req.body.start_date.length == 0 || req.body.end_date == null || req.body.end_date.length == 0) {
+            if (req.body.instructor_id == null || req.body.instructor_id.length === 0 || req.body.start_date == null || req.body.start_date.length === 0 || req.body.end_date == null || req.body.end_date.length === 0) {
                 res.status(404)
                 var response = {
                     message: "POST: 404 unvalid assignments, a valid assignment should have instructor_id, start_date & end_date", 
@@ -135,16 +135,16 @@ module.exports = function (router) {
             res.status(201)
             res.send(response)
             return
-        // } catch(err) {
-        //     // catch server error
-        //     res.status(500)
-        //     var response = {
-        //         message: "POST: 500 server error",
-        //         data: {}
-        //     }
-        //     res.send(response)
-        //     return
-        // }
+        } catch(err) {
+            // catch server error
+            res.status(500)
+            var response = {
+                message: "POST: 500 server error",
+                data: {}
+            }
+            res.send(response)
+            return
+        }
     });
 
     // // Endpoints: assignments/join_code

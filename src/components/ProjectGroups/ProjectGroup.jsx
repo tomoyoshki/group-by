@@ -3,7 +3,7 @@ import '../UserBoard/UserBoard'
 import Users from '../Users/Users'
 import { Link } from 'react-router-dom'
 
-export default function ProjectGroup({project_title, setUser}) {
+export default function ProjectGroup({project, setUser}) {
 
     return (
         <div className="project_group">
@@ -11,7 +11,7 @@ export default function ProjectGroup({project_title, setUser}) {
                 <Link className='back_button' to="/">&#8592;</Link>
                 <div className='title_tab'>
                     <div className='image'></div>
-                    {project_title}
+                    {project.assignment_name}
                 </div>
             </div>
             <div className='group_list'>

@@ -6,7 +6,7 @@ import UserBoard from '../../components/UserBoard/UserBoard';
 import ProjectGroup from '../../components/ProjectGroups/ProjectGroup';
 import UserDetails from '../../components/Users/UserDetails/UserDetails';
 
-export default function ProjectBoard({project_title}) {
+export default function ProjectBoard({project}) {
 
     const [user, setUser] = useState()
 
@@ -15,7 +15,7 @@ export default function ProjectBoard({project_title}) {
     }
     return(
         <div className='projectboard_page'>
-            <ProjectGroup project_title={project_title} setUser={setUser}/>
+            <ProjectGroup project={project} setUser={setUser}/>
             {user ? <UserDetails user={user} skills={["react", "ml", "system", "skill 1", "skill2", "machien learning"]} /> : <></>}
         </div>
     );

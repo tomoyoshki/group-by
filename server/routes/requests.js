@@ -253,8 +253,10 @@ module.exports = function (router) {
     // DELETE
     cur_requestRoute.delete(async function(req, res) {
         try {
+            console.log(req.params.id)
             const request = await Request.findOne({_id: req.params.id}).catch(err => {})
-            if (request == null || request.length == 0) {
+            if (request == null || request.length === 0) {
+                console.log("Did not find")
                 res.status(404)
                 var response = {
                     message: "DELETE: 404 not found",
@@ -298,8 +300,9 @@ module.exports = function (router) {
             res.status(204)
             res.send(response)
             return
-        } catch {
+        } catch (e){
             // catch server error
+            console.log(e)
             res.status(500)
             var response = {
                 message: "DELETE: 500 server error",

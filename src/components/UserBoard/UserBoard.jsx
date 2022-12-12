@@ -12,39 +12,19 @@ export default function UserBoard() {
     const getUser = async() => {
         try {
             const params = {
-                _id: getToken(),
+                user_get_request: getToken(),
             };
 
-            const res = await axios.get("http://localhost:4000/api/users", {params: {
+            const res = await axios.get("http://localhost:4000/api/requests", {params: {
                 where : JSON.stringify(params)
             }});
 
             if (res.status === 404) {
-                navigate("/login")
+                return
             }
 
-            const request_ids = res.data.data[0].recevied_request_ids
-            var local_in_messages = [{
-                from_user: "me",
-                assignment_id: 'some_id'
-            }]
-            request_ids.forEach(async (element) => {
-                var p = {
-                    _id: element
-                }
-                var res = await axios.get("http://localhost:4000/api/requests", {
-                    params: {
-                        where: JSON.stringify(p)
-                    }
-                })
-                if (res.status === 404) return
-                var data = res.data.data
-                local_in_messages.push({
-                    from_user: data.user_send_request,
-                    assignment_id: data.assignment_id
-                })
-            })
-            setInMessage(local_in_messages)
+            var data = res.data.data
+            setInMessage(data)
         } catch(e) {
             console.log(e)
         }
@@ -59,7 +39,7 @@ export default function UserBoard() {
     }, [])
 
     useEffect(()=>{
-        console.log(in_message)
+        console.log("Eff: ", in_message)
     }, [in_message])
     return (
         <div className="user_board">
@@ -74,11 +54,13 @@ export default function UserBoard() {
             <div className="message_section">
                 <div className="message_title">Incomming Requests</div>
                 {
+                    console.log("div", in_message)
+                }{
                     in_message.map(element=> {
-                        console.log(element)
+                        console.log("map: ", element)
                         return (
-                            <Link className="message">
-                                Assignment: {element.assignment_id}
+                            <Link key={element.user_send_request + element.assignment_id} className="message" to={`/projects/${element.assignment_id}`}>
+                                Assignment: {element.assignment_name}
                             </Link>
                         )
                     })

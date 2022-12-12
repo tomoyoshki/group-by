@@ -15,7 +15,7 @@ function hashString(str) {
 }
 
 export default function UserDetails({target_user, project}) {
-    const [received, setReceived] = useState(false)
+    const [received, setReceived] = useState("")
     const colormap = [
         "red",
         "green",
@@ -28,35 +28,27 @@ export default function UserDetails({target_user, project}) {
     const getUser = async() => {
         try {
             const params = {
-                _id: getToken(),
+                user_get_request: getToken(),
             };
 
-            const res = await axios.get("http://localhost:4000/api/users", {params: {
+            const res = await axios.get("http://localhost:4000/api/requests", {params: {
                 where : JSON.stringify(params)
             }});
-
             if (res.status === 404) {
+                setReceived("")
+                console.log("ASDasdjioqwe")
                 return
             }
 
-            const user_data = res.data.data[0]
-            console.log("User data: ", user_data)
-            var request_ids = user_data.recevied_request_ids
-            request_ids.forEach( async (element) =>{
-                var p = {
-                    _id: element
+            var data = res.data.data
+            for (let i = 0; i < data.length; i++) {
+                if (data[i].assignment_id === project._id && data[i].user_get_request === getToken() && data[i].user_send_request === target_user.user_id) {
+                    setReceived(data[i]._id)
+                    break
+                } else {
+                    setReceived("")
                 }
-                var res = await axios.get("http://localhost:4000/api/requests", {
-                    params: {
-                        where: JSON.stringify(p)
-                    }
-                })
-                if (res.status === 404) return
-                var data = res.data.data
-                if (data.user_get_request === getToken() && data.user_send_request === target_user.user_id && data.assignment_id === project._id) {
-                    setReceived(true)
-                }
-            });
+            }
         } catch(e) {
             console.log(e)
         }
@@ -70,7 +62,6 @@ export default function UserDetails({target_user, project}) {
                 user_send_request: getToken()
             }
 
-            console.log(params)
             const url = "http://localhost:4000/api/requests"
             const res = await axios.post(url, params);
             console.log("Send request: ", res)
@@ -82,11 +73,12 @@ export default function UserDetails({target_user, project}) {
     const handleApprove = async () => {
         try {
             const params = {
-                assignment_id: project._id,
-                user_get_request: target_user.user_id,
-                user_send_request: getToken()
+                _id: received
             }
-            console.log("approve request")
+            console.log(params)
+            var res = await axios.delete(`http://localhost:4000/api/requests/${received}`)
+            console.log(res)
+            setReceived("")
         } catch(e) {
             console.log(e)
         }
@@ -116,7 +108,7 @@ export default function UserDetails({target_user, project}) {
         </div>
         { getRole() === "student" ? <div className="user_action">
         {
-            received ? <span onClick={handleApprove}>Approve Request</span> : <span onClick={handleOnclick}>Send Request</span>
+            received !== "" ? <span onClick={handleApprove}>Approve Request</span> : <span onClick={handleOnclick}>Send Request</span>
         }
         </div> : <></>
         }

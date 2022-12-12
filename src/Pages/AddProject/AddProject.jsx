@@ -33,7 +33,6 @@ export default function AddProjectPage() {
                 return null
             }
 
-            console.log(res.data.data[0])
             const post_params = {
                 assignment_id: res.data.data[0]._id,
                 user_id: getToken(),
@@ -43,7 +42,6 @@ export default function AddProjectPage() {
             }
             const post_url = "http://localhost:4000/api/infos"
             const post_res = await axios.post(post_url, post_params)
-            console.log(post_res)
             return post_res
         } catch(e) {
             console.log(e)

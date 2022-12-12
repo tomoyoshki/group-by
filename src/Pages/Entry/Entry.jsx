@@ -39,7 +39,6 @@ function Entry() {
                     <Route path='/addproject' element={<AddProject />} />
                     {
                         allProjects.map((element) => {
-                            console.log("map: ", element)
                             return <Route key={element._id} path={"/projects/" + element._id} element={<ProjectBoard project={element} />} />
                         })
                     }

@@ -26,6 +26,8 @@ export default function ProjectList() {
     }
 
     const getTeams = async () => {
+        var matched_set
+        var unmatched_set
         try {
             const params = {
                 _id: getToken(),
@@ -42,11 +44,11 @@ export default function ProjectList() {
             const user_data = res.data.data[0]
             setUserMatched(user_data.matched_assignment_ids)
             setUserUnMatched(user_data.unmatched_assignment_ids)
+            matched_set = new Set(user_data.matched_assignment_ids);
+            unmatched_set = new Set(user_data.unmatched_assignment_ids);
         } catch(e) {
             console.log(e)
         }
-        var matched_set = new Set(user_matched);
-        var unmatched_set = new Set(user_unmatched);
         try {
             const res = await axios.get("http://localhost:4000/api/assignments");
 
@@ -54,14 +56,12 @@ export default function ProjectList() {
                 console.log("Failed to find teams")
                 return null
             }
-
             if (res.data.data.length === 0) {
                 setMatchedTeam([])
                 setUnmatchedTeam([])
+                console.log("Returned")
                 return
             }
-
-            console.log("Get Assignments result: ", res)
 
             var local_unmatched = []
             var local_matched = []
@@ -108,13 +108,16 @@ export default function ProjectList() {
     }
 
     useEffect(()=> {
-        // getToken() === "student" ? getTeams() : getInstructorTeams()
-        getInstructorTeams()
+        getRole() === "student" ? getTeams() : getInstructorTeams()
     }, [])
 
     useEffect(()=> {
-        console.log("Use effect: ", created_team)
+        // console.log("team, effect: ", created_team)
     }, [created_team])
+
+    useEffect(()=> {
+        // console.log("student effect: ", unmatched_team, matched_team)
+    }, [unmatched_team, matched_team])
 
     const student_project_section = () => {
         return (
@@ -124,7 +127,7 @@ export default function ProjectList() {
                     <div className="project_table">
                     {
                         unmatched_team.map((element, i) => {
-                            return <Project key={i} name={element.name} matched={false} assignment={element}/>
+                            return <Project key={i} name={element.assignment_name} matched={false} assignment={element}/>
                         })
                     }
                     </div>
@@ -134,7 +137,7 @@ export default function ProjectList() {
                     <div className="project_table">
                     {
                         matched_team.map((element, i) => {
-                            return <Project key={i} name={element.name} matched={false} assignment={element} />
+                            return <Project key={i} name={element.assignment_name} matched={false} assignment={element} />
                         })
                     }
                     </div>
@@ -151,7 +154,6 @@ export default function ProjectList() {
                     <div className="project_table">
                     {
                         created_team.map((element, i) => {
-                            console.log(element)
                             return <Project key={i} name={element.assignment_name} matched={false} assignment={element}/>
                         })
                     }

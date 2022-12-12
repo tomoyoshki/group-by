@@ -1,12 +1,41 @@
 import "./UserBoard.scss"
-import { removeToken } from "../../utils/useToken"
+import { getToken, removeToken } from "../../utils/useToken"
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+
 export default function UserBoard() {
+    const [in_message, setInMessage] = useState([])
+    const [out_message, setOutMessage] = useState([])
+
     const navigate = useNavigate();
+    const getUser = async() => {
+        try {
+            const params = {
+                _id: getToken(),
+            };
+
+            const res = await axios.get("http://localhost:4000/api/users", {params: {
+                where : JSON.stringify(params)
+            }});
+
+            if (res.status === 404) {
+                navigate("/login")
+            }
+
+            const user_data = res.data.data[0]
+        } catch(e) {
+            console.log(e)
+        }
+    }
     const handleSignout = ()=> {
         removeToken();
         navigate('/login')
     }
+
+    useEffect(()=>{
+        getUser()
+    }, [])
     return (
         <div className="user_board">
             <div className="user_section">

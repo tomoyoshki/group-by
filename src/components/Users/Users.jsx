@@ -56,9 +56,8 @@ export default function Users({user, setUser}) {
         <div className="users" onClick={()=>setUser(user)}>
             <div className='user_image'></div>
             <div className='user_info'>
-                <UserColumn column_type={"text"} column_name={"Description: "} column_info={"somemting description"}/>
-                <UserColumn column_type={"skills"} column_name={"Skills: "} column_info={["skill1", "skill2"]}/>
-                <UserColumn column_type={"text"} column_name={"Others: "} column_info={"somemting other"}/>
+                <UserColumn column_type={"text"} column_name={"Description: "} column_info={user.description}/>
+                <UserColumn column_type={"skills"} column_name={"Skills: "} column_info={user.skills_list}/>
             </div>
         </div>
     )

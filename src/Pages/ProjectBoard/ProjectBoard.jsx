@@ -8,7 +8,15 @@ import UserDetails from '../../components/Users/UserDetails/UserDetails';
 
 export default function ProjectBoard({project}) {
 
-    const [user, setUser] = useState()
+    const [user, setUser] = useState({
+        assignment_id: "",
+        description: "",
+        matched: false,
+        skills_list: [],
+        user_id: "",
+        __v: -1,
+        _id: ""
+    })
 
     if(!getToken()) {
         return <Navigate replace to="/login"/>
@@ -16,7 +24,7 @@ export default function ProjectBoard({project}) {
     return(
         <div className='projectboard_page'>
             <ProjectGroup project={project} setUser={setUser}/>
-            {user ? <UserDetails user={user} skills={["react", "ml", "system", "skill 1", "skill2", "machien learning"]} /> : <></>}
+            {user.__v !== -1 ? <UserDetails target_user={user} project={project} /> : <></>}
         </div>
     );
 }

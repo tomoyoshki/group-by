@@ -2,9 +2,38 @@ import './ProjectGroup.scss'
 import '../UserBoard/UserBoard'
 import Users from '../Users/Users'
 import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 
 export default function ProjectGroup({project, setUser}) {
+    const [userinfo, setUserInfo] = useState([])
+    const getIndividualInfo = async () => {
+        const params = {
+            assignment_id: project._id
+        }
+        const url = `http://localhost:4000/api/infos`
+        try {
+            const res = await axios.get(url, {params: {
+                where: JSON.stringify(params)
+            }});
 
+            if (res.status === 404) {
+                return null
+            }
+
+            const user_data = res.data.data
+            setUserInfo(user_data)
+        } catch(e) {
+            console.log(e)
+        }
+    }
+    useEffect(()=> {
+        getIndividualInfo()
+    }, [])
+
+    useEffect(()=> {
+        console.log("eff: ", userinfo)
+    }, [userinfo])
     return (
         <div className="project_group">
             <div className='project_header'>
@@ -15,15 +44,11 @@ export default function ProjectGroup({project, setUser}) {
                 </div>
             </div>
             <div className='group_list'>
-                <Users setUser={setUser} user={"user1"}/>
-                <Users setUser={setUser} user={"user2"}/>
-                <Users setUser={setUser} user={"user3"}/>
-                <Users setUser={setUser} user={"user4"}/>
-                <Users setUser={setUser} user={"user5"}/>
-                <Users setUser={setUser} user={"user6"}/>
-                <Users setUser={setUser} user={"user7"}/>
-                <Users setUser={setUser} user={"user8"}/>
-                <Users setUser={setUser} user={"user9"}/>
+            {
+                userinfo.map((element) => {
+                    return <Users key={element.user_id} setUser={setUser} user={element} />
+                })
+            }
             </div>
         </div>
     )

@@ -27,9 +27,9 @@ module.exports = function (router) {
             if (count) {
                 const infos_count = await IndividualAssignmentInfo.find(where, select).sort(sort).skip(skip).limit(limit).countDocuments().catch(err => {})
                 if (infos == null || infos.length == 0) {
-                    res.status(404)
+                    res.status(200)
                     var response = {
-                        message: "GET: 404 not found",
+                        message: "GET: info not found",
                         data: {}
                     }
                     res.send(response)
@@ -111,10 +111,16 @@ module.exports = function (router) {
 
             // update
             let cur_user = await User.findOne({_id: infos.user_id}, {}).catch(err => {})
-            if (!cur_user.unmatched_assignment_ids.includes(infos.user_id)) {
-                cur_user.unmatched_assignment_ids.push(infos.user_id)
+            if (!cur_user.unmatched_assignment_ids.includes(infos.assignment_id)) {
+                cur_user.unmatched_assignment_ids.push(infos.assignment_id)
             }
             await cur_user.save().catch(err => {})
+
+            let cur_assignment = await Assignment.findOne({_id: infos.assignment_id}, {}).catch(err => {})
+            if (!cur_assignment.user_ids.includes(infos.user_id)) {
+                cur_assignment.user_ids.push(infos.user_id)
+            }
+            await cur_assignment.save().catch(err => {})
 
 
             await infos.save()

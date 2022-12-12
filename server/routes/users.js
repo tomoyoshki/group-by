@@ -85,7 +85,7 @@ module.exports = function (router) {
     });
     // POST
     usersRoute.post(async function(req, res) {
-        try {
+        // try {
             // Users cannot be created (or updated) without email, password, role
             if (req.body.password == null || req.body.password.length == 0 || req.body.email == null || req.body.email.length == 0 || req.body.role == null || req.body.role.length == 0) {
                 res.status(404)
@@ -98,8 +98,8 @@ module.exports = function (router) {
             }
 
             // Multiple users with the same email cannot exist
-            const find_email_by_user = await User.find({email: req.params.email}).catch(err => {})
-            if (find_email_by_user != null && find_email_by_user.length > 0) {
+            const find_email_by_user = await User.find({email: req.body.email}).catch(err => {})
+            if (find_email_by_user != null) {
                 res.status(404)
                 var response = {
                     message: "Post: 404 can't create multiple users with the same email",
@@ -138,58 +138,58 @@ module.exports = function (router) {
             res.status(201)
             res.send(response)
             return
-        } catch(err) {
-            // catch server error
-            res.status(500)
-            var response = {
-                message: "POST: 500 server error",
-                data: {}
-            }
-            res.send(response)
-            return
-        }
+        // } catch(err) {
+        //     // catch server error
+        //     res.status(500)
+        //     var response = {
+        //         message: "POST: 500 server error",
+        //         data: {}
+        //     }
+        //     res.send(response)
+        //     return
+        // }
     });
 
-    // Endpoints: users/:id
-    var cur_userRoute = router.route('/users/:id');
-    // GET
-    cur_userRoute.get(async function(req, res) {
-        try {
-            let parsed_url = url.parse(req.url)
-            let parsed_queryString = querystring.parse(parsed_url.query)
+    // // Endpoints: users/:id
+    // var cur_userRoute = router.route('/users/:id');
+    // // GET
+    // cur_userRoute.get(async function(req, res) {
+    //     try {
+    //         let parsed_url = url.parse(req.url)
+    //         let parsed_queryString = querystring.parse(parsed_url.query)
 
-            let select = parsed_queryString.select ? JSON.parse(parsed_queryString.select) : {}
+    //         let select = parsed_queryString.select ? JSON.parse(parsed_queryString.select) : {}
 
-            const user = await User.findOne({_id: req.params.id}, select).catch(err => {})
-            // when user not found
-            if (user == null || user.length == 0) {
-                res.status(404)
-                var response = {
-                    message: "GET: 404 not found user with provided email",
-                    data: {}
-                }
-                res.send(response)
-                return
-            }
-            // When get success
-            var response = {
-                message: "GET: 200 success",
-                data: user
-            }
-            res.status(200)
-            res.send(response)
-            return
-        } catch(err) {
-            // catch server error
-            res.status(500)
-            var response = {
-                message: "GET: 500 server error",
-                data: err
-            }
-            res.send(response)
-            return
-        }
-    });
+    //         const user = await User.findOne({_id: req.params.id}, select).catch(err => {})
+    //         // when user not found
+    //         if (user == null || user.length == 0) {
+    //             res.status(404)
+    //             var response = {
+    //                 message: "GET: 404 not found user with provided id",
+    //                 data: {}
+    //             }
+    //             res.send(response)
+    //             return
+    //         }
+    //         // When get success
+    //         var response = {
+    //             message: "GET: 200 success",
+    //             data: user
+    //         }
+    //         res.status(200)
+    //         res.send(response)
+    //         return
+    //     } catch(err) {
+    //         // catch server error
+    //         res.status(500)
+    //         var response = {
+    //             message: "GET: 500 server error",
+    //             data: err
+    //         }
+    //         res.send(response)
+    //         return
+    //     }
+    // });
 
     // Endpoints: users/:email
     var cur_userRoute = router.route('/users/:email');

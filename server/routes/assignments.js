@@ -55,10 +55,10 @@ module.exports = function (router) {
 
             // when assignments not found
             if (assignments == null || assignments.length == 0) {
-                res.status(404)
+                res.status(200)
                 var response = {
-                    message: "GET: 404 not found",
-                    data: {}
+                    message: "GET: no assignment found",
+                    data: []
                 }
                 res.send(response)
                 return

@@ -15,7 +15,6 @@ module.exports = function (router) {
             let parsed_url = url.parse(req.url)
             let parsed_queryString = querystring.parse(parsed_url.query)
 
-            console.log(parsed_queryString.where)
             let where = parsed_queryString.where ? JSON.parse(parsed_queryString.where) : {}
             let sort = parsed_queryString.sort ? JSON.parse(parsed_queryString.sort) : {}
             let select = parsed_queryString.select ? JSON.parse(parsed_queryString.select): {}
@@ -84,6 +83,18 @@ module.exports = function (router) {
                 res.status(404)
                 var response = {
                     message: "POST: 404 unvalid info, a valid info should have assignment_id & user_id", 
+                    data: {}
+                }
+                res.send(response)
+                return
+            }
+
+            // Same user could not join the same assignment multiple times
+            const find_user_assignment = await IndividualAssignmentInfo.find({assignment_id: req.body.assignment_id, user_id: req.body.user_id}).catch(err => {})
+            if (find_user_assignment != null && find_user_assignment.length != 0) {
+                res.status(404)
+                var response = {
+                    message: "Post: 404 the user has already joined that assignment",
                     data: {}
                 }
                 res.send(response)

@@ -117,7 +117,8 @@ module.exports = function (router) {
                 matched_assignment_ids: req.body.matched_assignment_ids ? req.body.matched_assignment_ids : [],
                 sent_request_ids: req.body.sent_request_ids ? req.body.sent_request_ids : [],
                 recevied_request_ids: req.body.recevied_request_ids ? req.body.recevied_request_ids : [],
-                joined_team_ids: req.body.joined_team_ids ? req.body.joined_team_ids : []
+                joined_team_ids: req.body.joined_team_ids ? req.body.joined_team_ids : [],
+                created_assignment_ids: req.body.created_assignment_ids ? req.body.created_assignment_ids : []
             })
 
             if (users == null || users.length == 0) {

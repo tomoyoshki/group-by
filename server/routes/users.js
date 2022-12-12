@@ -85,7 +85,7 @@ module.exports = function (router) {
     });
     // POST
     usersRoute.post(async function(req, res) {
-        // try {
+        try {
             // Users cannot be created (or updated) without email, password, role
             if (req.body.password == null || req.body.password.length == 0 || req.body.email == null || req.body.email.length == 0 || req.body.role == null || req.body.role.length == 0) {
                 res.status(404)
@@ -139,61 +139,20 @@ module.exports = function (router) {
             res.status(201)
             res.send(response)
             return
-        // } catch(err) {
-        //     // catch server error
-        //     res.status(500)
-        //     var response = {
-        //         message: "POST: 500 server error",
-        //         data: {}
-        //     }
-        //     res.send(response)
-        //     return
-        // }
+        } catch(err) {
+            // catch server error
+            res.status(500)
+            var response = {
+                message: "POST: 500 server error",
+                data: {}
+            }
+            res.send(response)
+            return
+        }
     });
 
-    // // Endpoints: users/:id
-    // var cur_userRoute = router.route('/users/:id');
-    // // GET
-    // cur_userRoute.get(async function(req, res) {
-    //     try {
-    //         let parsed_url = url.parse(req.url)
-    //         let parsed_queryString = querystring.parse(parsed_url.query)
-
-    //         let select = parsed_queryString.select ? JSON.parse(parsed_queryString.select) : {}
-
-    //         const user = await User.findOne({_id: req.params.id}, select).catch(err => {})
-    //         // when user not found
-    //         if (user == null || user.length == 0) {
-    //             res.status(404)
-    //             var response = {
-    //                 message: "GET: 404 not found user with provided id",
-    //                 data: {}
-    //             }
-    //             res.send(response)
-    //             return
-    //         }
-    //         // When get success
-    //         var response = {
-    //             message: "GET: 200 success",
-    //             data: user
-    //         }
-    //         res.status(200)
-    //         res.send(response)
-    //         return
-    //     } catch(err) {
-    //         // catch server error
-    //         res.status(500)
-    //         var response = {
-    //             message: "GET: 500 server error",
-    //             data: err
-    //         }
-    //         res.send(response)
-    //         return
-    //     }
-    // });
-
-    // Endpoints: users/:email
-    var cur_userRoute = router.route('/users/:email');
+    // Endpoints: users/:id
+    var cur_userRoute = router.route('/users/:id');
     // GET
     cur_userRoute.get(async function(req, res) {
         try {
@@ -202,12 +161,12 @@ module.exports = function (router) {
 
             let select = parsed_queryString.select ? JSON.parse(parsed_queryString.select) : {}
 
-            const user = await User.findOne({email: req.params.email}, select).catch(err => {})
+            const user = await User.findOne({_id: req.params.id}, select).catch(err => {})
             // when user not found
             if (user == null || user.length == 0) {
                 res.status(404)
                 var response = {
-                    message: "GET: 404 not found user with provided email",
+                    message: "GET: 404 not found user with provided id",
                     data: {}
                 }
                 res.send(response)
@@ -233,76 +192,117 @@ module.exports = function (router) {
         }
     });
 
-    // PUT
-    cur_userRoute.put(async function(req, res) {
-        try {
-            // check whether put with email
-            if (req.body.email == null || req.body.email.length == 0) {
-                res.status(404)
-                var response = {
-                    message: "PUT: 404 can't put without email",
-                    data: {}
-                }
-                res.send(response)
-                return
-            }
+    // // Endpoints: users/:email
+    // var cur_userRoute = router.route('/users/:email');
+    // // GET
+    // cur_userRoute.get(async function(req, res) {
+    //     try {
+    //         let parsed_url = url.parse(req.url)
+    //         let parsed_queryString = querystring.parse(parsed_url.query)
 
-            const user = await User.findOne({email: req.params.email}).catch(err => {})
-            // When user not found
-            if (user == null || user.length == 0) {
-                res.status(404)
-                var response = {
-                    message: "PUT: 404 not found",
-                    data: {}
-                }
-                res.send(response)
-                return
-            }
+    //         let select = parsed_queryString.select ? JSON.parse(parsed_queryString.select) : {}
 
-            // Multiple users with the same email cannot exist
-            const find_email_by_user = await User.find({email: req.params.email}).catch(err => {})
-            if (find_email_by_user != null && find_email_by_user.length > 0 && String(user.id) != String(find_email_by_user[0].id)) {
-                res.status(404)
-                var response = {
-                    message: "PUT: 404 can't create multiple users with the same email",
-                    data: {}
-                }
-                res.send(response)
-                return
-            }
+    //         const user = await User.findOne({email: req.params.email}, select).catch(err => {})
+    //         // when user not found
+    //         if (user == null || user.length == 0) {
+    //             res.status(404)
+    //             var response = {
+    //                 message: "GET: 404 not found user with provided email",
+    //                 data: {}
+    //             }
+    //             res.send(response)
+    //             return
+    //         }
+    //         // When get success
+    //         var response = {
+    //             message: "GET: 200 success",
+    //             data: user
+    //         }
+    //         res.status(200)
+    //         res.send(response)
+    //         return
+    //     } catch(err) {
+    //         // catch server error
+    //         res.status(500)
+    //         var response = {
+    //             message: "GET: 500 server error",
+    //             data: err
+    //         }
+    //         res.send(response)
+    //         return
+    //     }
+    // });
 
-            if (req.body.email) {
-                user.email = req.body.email
-            }
+    // // PUT
+    // cur_userRoute.put(async function(req, res) {
+    //     try {
+    //         // check whether put with email
+    //         if (req.body.email == null || req.body.email.length == 0) {
+    //             res.status(404)
+    //             var response = {
+    //                 message: "PUT: 404 can't put without email",
+    //                 data: {}
+    //             }
+    //             res.send(response)
+    //             return
+    //         }
 
-            if (req.body.password) {
-                user.password = req.body.password
-            }
+    //         const user = await User.findOne({email: req.params.email}).catch(err => {})
+    //         // When user not found
+    //         if (user == null || user.length == 0) {
+    //             res.status(404)
+    //             var response = {
+    //                 message: "PUT: 404 not found",
+    //                 data: {}
+    //             }
+    //             res.send(response)
+    //             return
+    //         }
 
-            if (req.body.role) {
-                user.role = req.body.role
-            }
+    //         // Multiple users with the same email cannot exist
+    //         const find_email_by_user = await User.find({email: req.params.email}).catch(err => {})
+    //         if (find_email_by_user != null && find_email_by_user.length > 0 && String(user.id) != String(find_email_by_user[0].id)) {
+    //             res.status(404)
+    //             var response = {
+    //                 message: "PUT: 404 can't create multiple users with the same email",
+    //                 data: {}
+    //             }
+    //             res.send(response)
+    //             return
+    //         }
 
-            await user.save()
-            // successfully put data
-            res.status(200)
-            var response = {
-                message: "PUT: 200 server success",
-                data: user
-            }
-            res.send(response)
-            return
-        } catch(err) {
-            // catch server error
-            res.status(500)
-            var response = {
-                message: "PUT: 500 server error",
-                data: {}
-            }
-            res.send(response)
-            return
-        }
-    });
+    //         if (req.body.email) {
+    //             user.email = req.body.email
+    //         }
+
+    //         if (req.body.password) {
+    //             user.password = req.body.password
+    //         }
+
+    //         if (req.body.role) {
+    //             user.role = req.body.role
+    //         }
+
+    //         await user.save()
+    //         // successfully put data
+    //         res.status(200)
+    //         var response = {
+    //             message: "PUT: 200 server success",
+    //             data: user
+    //         }
+    //         res.send(response)
+    //         return
+    //     } catch(err) {
+    //         // catch server error
+    //         res.status(500)
+    //         var response = {
+    //             message: "PUT: 500 server error",
+    //             data: {}
+    //         }
+    //         res.send(response)
+    //         return
+    //     }
+    // });
     // DELETE
     // cur_userRoute.delete(async function(req, res) {
     //     try {

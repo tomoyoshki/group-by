@@ -15,7 +15,6 @@ module.exports = function (router) {
             let parsed_url = url.parse(req.url)
             let parsed_queryString = querystring.parse(parsed_url.query)
 
-            console.log("Info get: ", parsed_queryString.where)
             let where = parsed_queryString.where ? JSON.parse(parsed_queryString.where) : {}
             let sort = parsed_queryString.sort ? JSON.parse(parsed_queryString.sort) : {}
             let select = parsed_queryString.select ? JSON.parse(parsed_queryString.select): {}
@@ -27,9 +26,9 @@ module.exports = function (router) {
             if (count) {
                 const infos_count = await IndividualAssignmentInfo.find(where, select).sort(sort).skip(skip).limit(limit).countDocuments().catch(err => {})
                 if (infos == null || infos.length == 0) {
-                    res.status(404)
+                    res.status(200)
                     var response = {
-                        message: "GET: 404 not found",
+                        message: "GET: info not found",
                         data: {}
                     }
                     res.send(response)
@@ -77,6 +76,10 @@ module.exports = function (router) {
 
         // post
         infosRoute.post(async function(req, res) {
+<<<<<<< HEAD
+=======
+            
+>>>>>>> e102c72c3f3314c6fc6df3a6dfa5335be34fe6b7
         try {
             // Infos cannot be created (or updated) without assignment_id and user_id
             console.log(req)
@@ -84,6 +87,18 @@ module.exports = function (router) {
                 res.status(404)
                 var response = {
                     message: "POST: 404 unvalid info, a valid info should have assignment_id & user_id", 
+                    data: {}
+                }
+                res.send(response)
+                return
+            }
+
+            // Same user could not join the same assignment multiple times
+            const find_user_assignment = await IndividualAssignmentInfo.find({assignment_id: req.body.assignment_id, user_id: req.body.user_id}).catch(err => {})
+            if (find_user_assignment != null && find_user_assignment.length != 0) {
+                res.status(404)
+                var response = {
+                    message: "Post: 404 the user has already joined that assignment",
                     data: {}
                 }
                 res.send(response)
@@ -111,10 +126,16 @@ module.exports = function (router) {
 
             // update
             let cur_user = await User.findOne({_id: infos.user_id}, {}).catch(err => {})
-            if (!cur_user.unmatched_assignment_ids.includes(infos.user_id)) {
-                cur_user.unmatched_assignment_ids.push(infos.user_id)
+            if (!cur_user.unmatched_assignment_ids.includes(infos.assignment_id)) {
+                cur_user.unmatched_assignment_ids.push(infos.assignment_id)
             }
             await cur_user.save().catch(err => {})
+
+            let cur_assignment = await Assignment.findOne({_id: infos.assignment_id}, {}).catch(err => {})
+            if (!cur_assignment.user_ids.includes(infos.user_id)) {
+                cur_assignment.user_ids.push(infos.user_id)
+            }
+            await cur_assignment.save().catch(err => {})
 
 
             await infos.save()

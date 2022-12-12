@@ -151,7 +151,7 @@ module.exports = function (router) {
     });
 
     // Endpoints: users/:email
-    var cur_userRoute = router.route('/users/:id');
+    var cur_userRoute = router.route('/users/:email');
     // GET
     cur_userRoute.get(async function(req, res) {
         try {

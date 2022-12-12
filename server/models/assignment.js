@@ -3,7 +3,9 @@ var mongoose = require('mongoose');
 
 // Define our assignment schema
 var AssignmentSchema = new mongoose.Schema({
-    assignment_id: String,
+    start_date: Date,
+    end_date: Date,
+    join_code: String,
     team_ids: {type: [String], default: []},
     user_ids: {type: [String], default: []}
 });

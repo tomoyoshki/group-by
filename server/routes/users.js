@@ -23,7 +23,6 @@ module.exports = function (router) {
             let parsed_url = url.parse(req.url)
             let parsed_queryString = querystring.parse(parsed_url.query)
 
-            console.log(parsed_queryString.where)
             let where = parsed_queryString.where ? JSON.parse(parsed_queryString.where) : {}
             let sort = parsed_queryString.sort ? JSON.parse(parsed_queryString.sort) : {}
             let select = parsed_queryString.select ? JSON.parse(parsed_queryString.select): {}
@@ -99,7 +98,7 @@ module.exports = function (router) {
 
             // Multiple users with the same email cannot exist
             const find_email_by_user = await User.find({email: req.body.email}).catch(err => {})
-            if (find_email_by_user != null) {
+            if (find_email_by_user != null && find_email_by_user.length != 0) {
                 res.status(404)
                 var response = {
                     message: "Post: 404 can't create multiple users with the same email",

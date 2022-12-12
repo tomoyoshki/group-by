@@ -1,4 +1,6 @@
 const Request = require('../models/request');
+const User = require('../models/user');
+const Assignment = require('../models/assignment');
 const querystring = require('querystring');
 const url = require('url');
 
@@ -43,7 +45,7 @@ module.exports = function (router) {
             }
 
             // when requests not found
-            if (request == null || requests.length == 0) {
+            if (requests == null || requests.length == 0) {
                 res.status(404)
                 var response = {
                     message: "GET: 404 not found",
@@ -76,7 +78,7 @@ module.exports = function (router) {
         // post
         requestsRoute.post(async function(req, res) {
             
-        try {
+        // try {
             // Requests cannot be created (or updated) without user_get_request and user_send_request
             if (req.body.user_get_request == null || req.body.user_get_request.length == 0 || req.body.user_send_request == null || req.body.user_send_request.length == 0) {
                 res.status(404)
@@ -88,10 +90,13 @@ module.exports = function (router) {
                 return
             }
 
+            const cur_assignment = await Assignment.findOne({_id: req.body.assignment_id}).catch(err => {})
+
             const requests = new Request({
                 user_get_request: req.body.user_get_request,
                 user_send_request: req.body.user_send_request,
-                assignment_id: req.body.assignment_id
+                assignment_id: req.body.assignment_id,
+                assignment_name: cur_assignment.assignment_name
             })
 
             if (requests == null || requests.length == 0) {
@@ -104,6 +109,18 @@ module.exports = function (router) {
                 return
             }
 
+            let cur_get_user = await User.findOne({_id: requests.user_get_request}, {}).catch(err => {})
+            if (!cur_get_user.recevied_request_ids.includes(requests._id)) {
+                cur_get_user.recevied_request_ids.push(requests._id)
+            }
+            await cur_get_user.save().catch(err => {})
+
+            let cur_send_user = await User.findOne({_id: requests.user_send_request}, {}).catch(err => {})
+            if (!cur_send_user.sent_request_ids.includes(requests._id)) {
+                cur_send_user.sent_request_ids.push(requests._id)
+            }
+            await cur_send_user.save().catch(err => {})
+
             await requests.save()
             var response = {
                 message: "POST: 201 created",
@@ -112,16 +129,16 @@ module.exports = function (router) {
             res.status(201)
             res.send(response)
             return
-        } catch(err) {
-            // catch server error
-            res.status(500)
-            var response = {
-                message: "POST: 500 server error",
-                data: {}
-            }
-            res.send(response)
-            return
-        }
+        // } catch(err) {
+        //     // catch server error
+        //     res.status(500)
+        //     var response = {
+        //         message: "POST: 500 server error",
+        //         data: {}
+        //     }
+        //     res.send(response)
+        //     return
+        // }
     });
 
     // Endpoints: requests/:id

@@ -23,6 +23,8 @@ export default function ProjectList({user_matched, user_unmatched}) {
     }
 
     const getTeams = async () => {
+        var matched_set = new Set(user_matched);
+        var unmatched_set = new Set(user_unmatched);
         try {
             const res = await axios.get("http://localhost:4000/api/assignments");
 
@@ -30,6 +32,16 @@ export default function ProjectList({user_matched, user_unmatched}) {
                 console.log("Failed to find teams")
                 return null
             }
+
+            if (res.data.data.length === 0) {
+                setMatchedTeam([])
+                setUnmatchedTeam([])
+                return
+            }
+
+            res.data.data.forEach(element => {
+                console.log(element)                
+            });
 
         } catch(e) {
             console.log(e)

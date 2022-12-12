@@ -76,10 +76,7 @@ module.exports = function (router) {
 
         // post
         infosRoute.post(async function(req, res) {
-<<<<<<< HEAD
-=======
-            
->>>>>>> e102c72c3f3314c6fc6df3a6dfa5335be34fe6b7
+
         try {
             // Infos cannot be created (or updated) without assignment_id and user_id
             console.log(req)

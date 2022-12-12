@@ -1,5 +1,6 @@
 const Team = require('../models/team');
 const User = require('../models/user');
+const Assignment = require('../models/assignment');
 const individualAssignmentInfo = require('../models/individualAssignmentInfo')
 const querystring = require('querystring');
 const url = require('url');
@@ -88,6 +89,7 @@ module.exports = function (router) {
                 res.send(response)
                 return
             }
+
 
             const teams = new Team({
                 assignment_id: req.body.assignment_id,

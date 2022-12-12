@@ -5,7 +5,8 @@ var mongoose = require('mongoose');
 var RequestSchema = new mongoose.Schema({
     user_get_request: String,
     user_send_request: String,
-    assignment_id: String
+    assignment_id: String,
+    assignment_name: String
 });
 
 // Export the Mongoose model

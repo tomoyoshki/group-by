@@ -99,7 +99,7 @@ module.exports = function (router) {
 
             // Multiple users with the same email cannot exist
             const find_email_by_user = await User.find({email: req.body.email}).catch(err => {})
-            if (find_email_by_user != null) {
+            if (find_email_by_user != null && find_email_by_user.length != 0) {
                 res.status(404)
                 var response = {
                     message: "Post: 404 can't create multiple users with the same email",

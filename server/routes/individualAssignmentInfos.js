@@ -1,4 +1,4 @@
-const Request = require('../models/request');
+const User = require('../models/user');
 const Assignment = require ('../models/assignment')
 const IndividualAssignmentInfo = require('../models/individualAssignmentInfo')
 const querystring = require('querystring');
@@ -37,7 +37,7 @@ module.exports = function (router) {
                 }
                 var response = {
                     message: "GET: 200 count infos",
-                    data: info_count
+                    data: infos_count
                 }
                 res.status(200)
                 res.send(response)
@@ -45,7 +45,7 @@ module.exports = function (router) {
             }
 
             // when infos not found
-            if (info == null || info.length == 0) {
+            if (infos == null || infos.length == 0) {
                 res.status(404)
                 var response = {
                     message: "GET: 404 not found",
@@ -78,7 +78,7 @@ module.exports = function (router) {
         // post
         infosRoute.post(async function(req, res) {
             
-        try {
+        // try {
             // Infos cannot be created (or updated) without assignment_id and user_id
             if (req.body.assignment_id == null || req.body.assignment_id.length == 0 || req.body.user_id == null || req.body.user_id.length == 0) {
                 res.status(404)
@@ -109,6 +109,14 @@ module.exports = function (router) {
                 return
             }
 
+            // update
+            let cur_user = await User.findOne({_id: infos.user_id}, {}).catch(err => {})
+            if (!cur_user.unmatched_assignment_ids.includes(infos.user_id)) {
+                cur_user.unmatched_assignment_ids.push(infos.user_id)
+            }
+            await cur_user.save().catch(err => {})
+
+
             await infos.save()
             var response = {
                 message: "POST: 201 created",
@@ -117,16 +125,16 @@ module.exports = function (router) {
             res.status(201)
             res.send(response)
             return
-        } catch(err) {
-            // catch server error
-            res.status(500)
-            var response = {
-                message: "POST: 500 server error",
-                data: {}
-            }
-            res.send(response)
-            return
-        }
+        // } catch(err) {
+        //     // catch server error
+        //     res.status(500)
+        //     var response = {
+        //         message: "POST: 500 server error",
+        //         data: {}
+        //     }
+        //     res.send(response)
+        //     return
+        // }
     });
 
     // Endpoints: infos/:id
@@ -205,7 +213,7 @@ module.exports = function (router) {
                 info.description = req.body.description
             }
             if (req.body.matched) {
-                info.matched = req.body.matched
+                info.matched = req.body.matched ? req.body.matched : false
             }
             if (req.body.team_id) {
                 info.team_id = req.body.team_id
@@ -215,7 +223,7 @@ module.exports = function (router) {
             }
 
             // update
-            let cur_user = await User.findOne({id: info.user_id}, {}).catch(err => {})
+            let cur_user = await User.findOne({_id: info.user_id}, {}).catch(err => {})
             if (!cur_user.unmatched_assignment_ids.includes(info.user_id)) {
                 cur_user.unmatched_assignment_ids.push(info.user_id)
             }

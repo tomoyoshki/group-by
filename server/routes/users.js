@@ -14,7 +14,7 @@ const Request = require('../models/request');
 //   }
 
 module.exports = function (router) {
-
+    
     // Endpoint: users
     var usersRoute = router.route('/users');
     // GET
@@ -144,6 +144,47 @@ module.exports = function (router) {
             var response = {
                 message: "POST: 500 server error",
                 data: {}
+            }
+            res.send(response)
+            return
+        }
+    });
+
+    // Endpoints: users/:id
+    var cur_userRoute = router.route('/users/:id');
+    // GET
+    cur_userRoute.get(async function(req, res) {
+        try {
+            let parsed_url = url.parse(req.url)
+            let parsed_queryString = querystring.parse(parsed_url.query)
+
+            let select = parsed_queryString.select ? JSON.parse(parsed_queryString.select) : {}
+
+            const user = await User.findOne({_id: req.params.id}, select).catch(err => {})
+            // when user not found
+            if (user == null || user.length == 0) {
+                res.status(404)
+                var response = {
+                    message: "GET: 404 not found user with provided email",
+                    data: {}
+                }
+                res.send(response)
+                return
+            }
+            // When get success
+            var response = {
+                message: "GET: 200 success",
+                data: user
+            }
+            res.status(200)
+            res.send(response)
+            return
+        } catch(err) {
+            // catch server error
+            res.status(500)
+            var response = {
+                message: "GET: 500 server error",
+                data: err
             }
             res.send(response)
             return

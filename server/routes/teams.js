@@ -1,4 +1,5 @@
 const Team = require('../models/team');
+const User = require('../models/user');
 const individualAssignmentInfo = require('../models/individualAssignmentInfo')
 const querystring = require('querystring');
 const url = require('url');
@@ -102,6 +103,28 @@ module.exports = function (router) {
                 res.send(response)
                 return
             }
+
+            // update related tables
+            teams.user_ids.forEach(async cur_user_id => {
+                // update related user info
+                let cur_user = await User.findOne({_id: cur_user_id}, {}).catch(err => {})
+                // delete from unmatched_assignment_ids
+                if (cur_user.unmatched_assignment_ids.includes(teams.assignment_id)) {
+                    let cur_id_index = cur_user.unmatched_assignment_ids.indexOf(team.assignment_id)
+                    cur_user.unmatched_assignment_ids.splice(cur_id_index, 1)
+                }
+                // add to matched_assignment_ids
+                if (!cur_user.matched_assignment_ids.includes(teams.assignment_id)) {
+                    cur_user.matched_assignment_ids.push(teams.assignment_id)
+                }
+                await cur_user.save().catch(err => {})
+
+                // update IndividualAssignmentInfo
+                let cur_info = await individualAssignmentInfo.findOne({assignment_id: teams.assignment_id, user_id: cur_user_id}, {}).catch(err => {})
+                cur_info.matched = true
+                cur_info.team_id = req.params.id
+                await cur_info.save().catch(err => {})
+            });
 
             await teams.save()
             var response = {

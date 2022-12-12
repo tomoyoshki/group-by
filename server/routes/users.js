@@ -23,7 +23,7 @@ module.exports = function (router) {
             let parsed_url = url.parse(req.url)
             let parsed_queryString = querystring.parse(parsed_url.query)
 
-            console.log(parsed_queryString.where)
+            console.log("user get(): parsed query string: ", parsed_queryString.where)
             let where = parsed_queryString.where ? JSON.parse(parsed_queryString.where) : {}
             let sort = parsed_queryString.sort ? JSON.parse(parsed_queryString.sort) : {}
             let select = parsed_queryString.select ? JSON.parse(parsed_queryString.select): {}
@@ -74,7 +74,7 @@ module.exports = function (router) {
         } catch(err) {
             // catch server error
             res.status(500)
-            console.log(err)
+            // console.log(err)
             var response = {
                 message: "GET: 500 server error",
                 data: {err}

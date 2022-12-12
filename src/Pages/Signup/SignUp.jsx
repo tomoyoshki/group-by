@@ -15,13 +15,27 @@ export default function SignUp() {
     const [password, setPassword] = useState("");
     const [role, setFormRole] = useState("student")
     const [invalidCredential, setCredential] = useState(true)
-
+    
     const navigate = useNavigate()
+    
+    const createUser = async (user_email, user_password, user_role) => {
+        try {
+            const params = {
+                email: user_email,
+                password: user_password,
+                role: user_role
+            };
 
-    const createUser = async (user_email, user_password) => {
-        return {
-            id: "someid",
-            role: "student"
+            const res = await axios.post("http://localhost:4000/api/users", params);
+            if (res.status === 201) {
+                return {
+                    user_id: res.data.data._id,
+                    user_email: res.data.data.email,
+                    user_role: res.data.data.role
+                }
+            }
+        } catch (e) {
+            console.log(e)
         }
     }
     const handleSubmit = async e => {
@@ -39,9 +53,9 @@ export default function SignUp() {
         }
 
         console.log(user)
-        setToken(user.id)
-        setRole(user.role)
-        console.log(getToken(), getRole())
+
+        setToken(user.user_id)
+        setRole(user.user_role)
         navigate('/')
     }
     return(

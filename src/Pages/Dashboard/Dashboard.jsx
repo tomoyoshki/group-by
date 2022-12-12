@@ -8,17 +8,47 @@ import axios from 'axios';
 
 export default function Dashboard() {
     const [userToken, setUserToken] = useState(getToken())
-    const [user, setUser] = useState()
+    const [user, setUser] = useState({
+        id: "",
+        role: "",
+        matched_assignment_ids: [],
+        unmatched_assignment_ids: [],
+        joined_team_ids: [],
+        received_request_ids: [],
+        sent_request_ids: []
+    })
     var nav = useNavigate()
-    const getUser = async (user_id) => {
-        // try {
-        //     const url = "https://localhost:4000"
-        //     const res = await axios.get(url);
-        //     var fetched_user = res.data
-        //     setUser(fetched_user)
-        // } catch(e) {
-        //     console.log(e)
-        // }
+    const getUser = async () => {
+        try {
+            const params = {
+                _id: userToken,
+            };
+
+            const res = await axios.get("http://localhost:4000/api/users", {params: {
+                where : JSON.stringify(params)
+            }});
+
+            if (res.status === 404) {
+                console.log("No user found")
+                return null
+            }
+
+            const user_data = res.data.data[0]
+            setUser({
+                id: user_data._id,
+                role: user_data.role,
+                matched_assignment_ids: user_data.matched_assignment_ids,
+                unmatched_assignment_ids: user_data.unmatched_assignment_ids,
+                joined_team_ids: user_data.joined_team_ids,
+                received_request_ids: user_data.received_request_ids,
+                sent_request_ids: user_data.sent_request_ids
+            })
+
+            console.log(user)
+
+        } catch(e) {
+            console.log(e)
+        }
     }
 
 
@@ -31,7 +61,7 @@ export default function Dashboard() {
 
     return(
         <div className='dashboard_page'>
-            <ProjectList user={{title: "user number 1", role: "instructor"}}/>
+            <ProjectList matched_teams={user.matched_assignment_ids} unmatched_teams={user.unmatched_assignment_ids}/>
             { getRole() === "instructor" ? <></> : <UserBoard user={user}/>}
         </div>
     );

@@ -12,12 +12,24 @@ export default function Login() {
     const [password, setPassword] = useState();
     const [userExist, setUserExist] = useState(true)
     const authenticateUser = async (user_email, user_password) => {
-        return {name: "somename", role: "instructor"}
         try {
-            const url = "https://pokeapi.co/api/v2/pokemon/?offset=0&limit=1200"
-            const res = await axios.get(url);
-            const data = res.data.results
-            console.log(data)
+            const params = {
+                email: user_email,
+            };
+
+            const res = await axios.get("http://localhost:4000/api/users", {params: {
+                where : JSON.stringify(params)
+            }});
+
+            if (res.status === 404 || res.data.data[0].password !== user_password) {
+                return null
+            }
+
+            return {
+                user_email: res.data.data[0].email,
+                user_id: res.data.data[0]._id,
+                user_role: res.data.data[0].role
+            }
         } catch(e) {
             console.log(e)
         }
@@ -34,10 +46,8 @@ export default function Login() {
             setUserExist(false)
             return
         }
-        setRole(user.role)
-        setToken(user.name)
-        console.log("id", user.name)
-        console.log(getToken())
+        setRole(user.user_role)
+        setToken(user.user_id)
         navigate('/');
     }
 

@@ -23,9 +23,20 @@ module.exports = function (router) {
             let count = parsed_queryString.count ? parsed_queryString.count === "true" : false
 
             const infos = await IndividualAssignmentInfo.find(where, select).sort(sort).skip(skip).limit(limit).catch(err => {})
+            
+            // when infos not found
+            if (infos == null || infos.length == 0) {
+                res.status(404)
+                var response = {
+                    message: "GET: 404 not found",
+                    data: {}
+                }
+                res.send(response)
+                return
+            }
             if (count) {
-                const infos_count = await IndividualAssignmentInfo.find(where, select).sort(sort).skip(skip).limit(limit).countDocuments().catch(err => {})
-                if (infos == null || infos.length == 0) {
+                const infos_count = await infos.length
+                if (infos_count == null || infos_count.length == 0) {
                     res.status(200)
                     var response = {
                         message: "GET: info not found",
@@ -38,21 +49,13 @@ module.exports = function (router) {
                     message: "GET: 200 count infos",
                     data: infos_count
                 }
+                console.log("infos: ", infos)
+                console.log("infos_count: ", infos_count)
                 res.status(200)
                 res.send(response)
                 return
             }
 
-            // when infos not found
-            if (infos == null || infos.length == 0) {
-                res.status(404)
-                var response = {
-                    message: "GET: 404 not found",
-                    data: {}
-                }
-                res.send(response)
-                return
-            }
             // when get success
             var response = {
                 message: "GET: 200 success",
@@ -106,8 +109,8 @@ module.exports = function (router) {
                 assignment_id: req.body.assignment_id,
                 user_id: req.body.user_id,
                 description: req.body.description,
-                matched: req.body.matched ? req.body.matched: false,
-                team_id: req.body.team_id,
+                matched: req.body.matched ? req.body.matched : false,
+                team_id: req.body.team_id ? req.body.team_id : "",
                 skills_list: req.body.skills_list ? req.body.skills_list: []
             })
 

@@ -58,10 +58,26 @@
         box-sizing: border-box;         /* Opera/IE 8+ */
         padding: 10px;
         border-bottom: 1px solid #e2d8d8;
+        justify-content: center;
+        align-items: center;
+        position: relative;
 
         .message_title {
             font-weight: 700;
             font-size: 15px;
+        }
+
+        .message {
+            display: flex;
+            justify-content: flex-start;
+            padding-left: 3px;
+            align-items: center;
+            width: 100%;
+            min-height: 20px;
+            display: flex;
+            border-radius: 5px;
+            background-color: red;
+            font-size: 10px;
         }
     }
 }

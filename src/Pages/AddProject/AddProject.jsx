@@ -1,58 +1,71 @@
 import './AddProject.scss'
 
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import {setToken} from '../../utils/useToken'
+import { useNavigate } from 'react-router-dom';
 
-export default function Login() {
+const nonexiststyle = {"color": "red", "fontSize": "10px"}
+
+export default function AddProjectPage() {
     const navigate = useNavigate();
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const [projectCode, setProjectCode] = useState("");
+    const [skills, setSkills] = useState("");
+    const [description, setDescription] = useState("")
+    const [validInput, setValid] = useState(true)
 
+    const addProject = async (projectCode, skillset, description) => {
+
+    }
     const handleSubmit = async e => {
         e.preventDefault();
-        console.log(username)
-        console.log(password)
-        navigate('/');
+        if (projectCode.length < 5 || description.length < 10) {
+            setValid(false)
+            return
+        }
+        var skillset = skills.split(',')
+        for(let i = 0; i < skillset.length; i++) {
+            skillset[i] = skillset[i].trim()
+        }
+
+        const project_ret = addProject(projectCode, skillset, description)
+        if (project_ret) {
+            navigate('/');
+        } else {
+            setValid(false)
+            return
+        }
+
+
     }
     return(
         <div className="addproject_page">
             <div className='addproject_wrapper'>
                 <div className='addproject_form'>
+                <div className='back' onClick={()=>navigate(-1)}>&#8592;</div>
                     <h1>Add project</h1>
                     <form onSubmit={handleSubmit}>
                         <label>
                             <p>Project join code</p>
                             <div className='button_wrapper'>
-                                <input className="input_box" type="text" onChange={e => setUsername(e.target.value)}/>
+                                <input className="input_box" type="text" onChange={e => setProjectCode(e.target.value)}/>
                             </div>
                         </label>
                         <label>
-                            <p>Skills</p>
+                            <p>Skills <span>(separated by ,)</span></p>
                             <div className='button_wrapper'>
-                                <input className="input_box" type="text" onChange={e => setUsername(e.target.value)}/>
+                                <input className="input_box" type="text" onChange={e => setSkills(e.target.value)}/>
                             </div>
                         </label>
                         <label>
                             <p>Description</p>
                             <div className='button_wrapper'>
-                                <input className="input_box" type="password" onChange={e=> setPassword(e.target.value)}/>
+                                <input className="input_box" type="text" onChange={e=> setDescription(e.target.value)}/>
                             </div>
                         </label>
-                        <label>
-                            <p>Others</p>
-                            <div className='button_wrapper'>
-                                <input className="input_box" type="password" onChange={e=> setPassword(e.target.value)}/>
-                            </div>
-                        </label>
+                        {validInput ? <></> : <div style={nonexiststyle}>sorry, invalid join code</div>}
                         <div className='sign-in'>
                             <button type="submit">Submit</button>
                         </div>
                     </form>
-
-                    <div className='signup_form'>
-                        Don't have an account? Click<Link className='signup_link' to="/signup">&nbsp;here&nbsp;</Link>to sign up
-                    </div>
                 </div>
             </div>
         </div>

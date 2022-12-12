@@ -81,6 +81,20 @@
                         font-weight: 800;
                     }
                 }
+                #role {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    input {
+                        width: 14px;
+                        height: 14px;
+                    }
+                    span {
+                        font-size: 12px;
+                        margin-left: 10px;
+                        margin-right: 20px;
+                    }
+                }
             }
 
             .signup_form {
@@ -99,6 +113,7 @@
                     color: black;
                 }
             }
+
         }
     }
 }

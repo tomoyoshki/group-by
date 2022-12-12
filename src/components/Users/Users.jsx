@@ -44,6 +44,12 @@ function UserColumn({column_type, column_name, column_info}) {
         </div>
     )
 }
+class User {
+    constructor({title, description}) {
+        this.title = title;
+        this.description = description;
+    }
+}
 
 export default function Users({user, setUser}) {
     return (

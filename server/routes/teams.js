@@ -13,7 +13,6 @@ module.exports = function (router) {
             let parsed_url = url.parse(req.url)
             let parsed_queryString = querystring.parse(parsed_url.query)
 
-            console.log(parsed_queryString.where)
             let where = parsed_queryString.where ? JSON.parse(parsed_queryString.where) : {}
             let sort = parsed_queryString.sort ? JSON.parse(parsed_queryString.sort) : {}
             let select = parsed_queryString.select ? JSON.parse(parsed_queryString.select): {}
@@ -199,7 +198,7 @@ module.exports = function (router) {
             // update related tables
             team.user_ids.forEach(async cur_user_id => {
                 // update related user info
-                let cur_user = await User.findOne({_id: cur_user_id}, {}).catch(err => {})
+                let cur_user = await Team.findOne({_id: cur_user_id}, {}).catch(err => {})
                 // delete from unmatched_assignment_ids
                 if (cur_user.unmatched_assignment_ids.includes(team.assignment_id)) {
                     let cur_id_index = cur_user.unmatched_assignment_ids.indexOf(team.assignment_id)

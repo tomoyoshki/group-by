@@ -1,22 +1,48 @@
 import React, { useState } from 'react';
 import './SignUp.scss';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate} from 'react-router-dom';
+import { getRole, getToken, setRole, setToken } from '../../utils/useToken';
+import axios from 'axios';
 
 async function signupUser(credentials) {
     return "some_token"
 }
 
-export default function SignUp({setToken}) {
+const nonexiststyle = {"color": "red", "fontSize": "10px"}
+
+export default function SignUp() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [role, setFormRole] = useState("student")
+    const [invalidCredential, setCredential] = useState(true)
 
+    const navigate = useNavigate()
+
+    const createUser = async (user_email, user_password) => {
+        return {
+            id: "someid",
+            role: "student"
+        }
+    }
     const handleSubmit = async e => {
         e.preventDefault();
-        const token = await signupUser({
-            username,
-            password
-        });
-        setToken(token)
+        if (/^([a-zA-Z0-9_.-]+@[a-zA-Z0-9]+.[a-zA-Z]+)$/.test(username) === false || password.length < 6 ) {
+            setCredential(false)
+            return
+        }
+        const user = await createUser(username, password, role)
+        if (!user) {
+            setCredential(false)
+            return
+        } else {
+            setCredential(true)
+        }
+
+        console.log(user)
+        setToken(user.id)
+        setRole(user.role)
+        console.log(getToken(), getRole())
+        navigate('/')
     }
     return(
         <div className="signup_page">
@@ -36,7 +62,16 @@ export default function SignUp({setToken}) {
                                 <input className="input_box" type="password" onChange={e=> setPassword(e.target.value)}/>
                             </div>
                         </label>
-                        {/*<div className='text'>Forgot password</div>*/}
+                        <label>
+                            <p>Role</p>
+                            <div className='button_wrapper' id='role'>
+                                <input className="input_box" type="radio" value="student" checked={role === "student"} onChange={e=> setFormRole("student")}/>
+                                <span>student</span>
+                                <input className="input_box" type="radio" value="instructor" checked={role === "instructor"} onChange={e=> setFormRole("instructor")}/>
+                                <span>instructor</span>
+                            </div>
+                        </label>
+                        {invalidCredential ? <></> : <div style={nonexiststyle}>please enter valid credentials</div>}
                         <div className='sign-in'>
                             <button type="submit">Sign up</button>
                         </div>

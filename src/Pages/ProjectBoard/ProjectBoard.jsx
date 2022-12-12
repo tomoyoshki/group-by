@@ -6,17 +6,17 @@ import UserBoard from '../../components/UserBoard/UserBoard';
 import ProjectGroup from '../../components/ProjectGroups/ProjectGroup';
 import UserDetails from '../../components/Users/UserDetails/UserDetails';
 
-export default function ProjectBoard() {
+export default function ProjectBoard({project_title}) {
 
-    const [user, setUser] = useState(null)
+    const [user, setUser] = useState()
 
     if(!getToken()) {
         return <Navigate replace to="/login"/>
     }
     return(
         <div className='projectboard_page'>
-            <ProjectGroup setUser={setUser}/>
-            {user ? <UserDetails user={user} /> : <></>}
+            <ProjectGroup project_title={project_title} setUser={setUser}/>
+            {user ? <UserDetails user={user} skills={["react", "ml", "system", "skill 1", "skill2", "machien learning"]} /> : <></>}
         </div>
     );
 }

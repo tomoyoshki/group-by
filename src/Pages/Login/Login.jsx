@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Link, NavLink, useNavigate} from 'react-router-dom';
+import { Link, useNavigate} from 'react-router-dom';
 import './Login.scss';
-import {getToken, setRole, setToken} from '../../utils/useToken'
+import {setRole, setToken} from '../../utils/useToken'
 import axios from 'axios';
 
 const nonexiststyle = {"color": "red", "fontSize": "10px"}

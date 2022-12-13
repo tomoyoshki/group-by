@@ -4,12 +4,9 @@ import { Link, useNavigate } from "react-router-dom"
 import { getRole, getToken, removeToken } from "../../utils/useToken"
 import { useState, useEffect } from "react"
 import axios from "axios"
-import { convertToObject } from "typescript"
 
 export default function ProjectList() {
     const nav = useNavigate()
-    const [user_matched, setUserMatched] = useState([])
-    const [user_unmatched, setUserUnMatched] = useState([])
     const [matched_team, setMatchedTeam] = useState([])
     const [unmatched_team, setUnmatchedTeam] = useState([])
     const [created_team, setCreatedTeam] = useState([])
@@ -25,91 +22,90 @@ export default function ProjectList() {
         nav('/login')
     }
 
-    const getTeams = async () => {
-        var matched_set
-        var unmatched_set
-        try {
-            const params = {
-                _id: getToken(),
-            };
-
-            const res = await axios.get("http://localhost:4000/api/users", {params: {
-                where : JSON.stringify(params)
-            }});
-
-            if (res.status === 404) {
-                nav("/login")
-            }
-
-            const user_data = res.data.data[0]
-            setUserMatched(user_data.matched_assignment_ids)
-            setUserUnMatched(user_data.unmatched_assignment_ids)
-            matched_set = new Set(user_data.matched_assignment_ids);
-            unmatched_set = new Set(user_data.unmatched_assignment_ids);
-        } catch(e) {
-            console.log(e)
-        }
-        try {
-            const res = await axios.get("http://localhost:4000/api/assignments");
-
-            if (res.status === 404) {
-                console.log("Failed to find teams")
-                return null
-            }
-            if (res.data.data.length === 0) {
-                setMatchedTeam([])
-                setUnmatchedTeam([])
-                console.log("Returned")
-                return
-            }
-
-            var local_unmatched = []
-            var local_matched = []
-            res.data.data.forEach(element => {
-                if (unmatched_set.has(element._id)) {
-                    local_unmatched.push(element)
-                } else if (matched_set.has(element._id)) {
-                    local_matched.push(element)
-                }
-            });
-
-            setMatchedTeam(local_matched)
-            setUnmatchedTeam(local_unmatched)
-
-        } catch(e) {
-            console.log(e)
-        }
-    }
-
-    const getInstructorTeams = async () => {
-        try {
-            const params = {
-                instructor_id: getToken()
-            }
-            const res = await axios.get("http://localhost:4000/api/assignments", {params: {
-                where: JSON.stringify(params)
-            }});
-
-            if (res.status === 404) {
-                console.log("Failed to find teams")
-                return null
-            }
-
-            if (res.data.data.length === 0) {
-                setCreatedTeam([])
-                return
-            }
-
-            setCreatedTeam(res.data.data)
-
-        } catch(e) {
-            console.log(e)
-        }
-    }
+    
 
     useEffect(()=> {
+        const getTeams = async () => {
+            var matched_set
+            var unmatched_set
+            try {
+                const params = {
+                    _id: getToken(),
+                };
+    
+                const res = await axios.get("http://localhost:4000/api/users", {params: {
+                    where : JSON.stringify(params)
+                }});
+    
+                if (res.status === 404) {
+                    nav("/login")
+                }
+    
+                const user_data = res.data.data[0]
+                matched_set = new Set(user_data.matched_assignment_ids);
+                unmatched_set = new Set(user_data.unmatched_assignment_ids);
+            } catch(e) {
+                console.log(e)
+            }
+            try {
+                const res = await axios.get("http://localhost:4000/api/assignments");
+    
+                if (res.status === 404) {
+                    console.log("Failed to find teams")
+                    return null
+                }
+                if (res.data.data.length === 0) {
+                    setMatchedTeam([])
+                    setUnmatchedTeam([])
+                    console.log("Returned")
+                    return
+                }
+    
+                var local_unmatched = []
+                var local_matched = []
+                res.data.data.forEach(element => {
+                    if (unmatched_set.has(element._id)) {
+                        local_unmatched.push(element)
+                    } else if (matched_set.has(element._id)) {
+                        local_matched.push(element)
+                    }
+                });
+    
+                setMatchedTeam(local_matched)
+                setUnmatchedTeam(local_unmatched)
+    
+            } catch(e) {
+                console.log(e)
+            }
+        }
+    
+        const getInstructorTeams = async () => {
+            try {
+                const params = {
+                    instructor_id: getToken()
+                }
+                const res = await axios.get("http://localhost:4000/api/assignments", {params: {
+                    where: JSON.stringify(params)
+                }});
+    
+                if (res.status === 404) {
+                    console.log("Failed to find teams")
+                    return null
+                }
+    
+                if (res.data.data.length === 0) {
+                    setCreatedTeam([])
+                    return
+                }
+    
+                setCreatedTeam(res.data.data)
+    
+            } catch(e) {
+                console.log(e)
+            }
+        }
         getRole() === "student" ? getTeams() : getInstructorTeams()
-    }, [])
+    }, [nav])
 
     useEffect(()=> {
         // console.log("team, effect: ", created_team)

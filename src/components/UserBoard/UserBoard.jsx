@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 
 export default function UserBoard() {
     const [in_message, setInMessage] = useState([])
-    const [out_message, setOutMessage] = useState([])
 
     const navigate = useNavigate();
     const getUser = async() => {

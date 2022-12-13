@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
 import './SignUp.scss';
 import { Link, useNavigate} from 'react-router-dom';
-import { getRole, getToken, setRole, setToken } from '../../utils/useToken';
+import { setRole, setToken } from '../../utils/useToken';
 import axios from 'axios';
-
-async function signupUser(credentials) {
-    return "some_token"
-}
 
 const nonexiststyle = {"color": "red", "fontSize": "10px"}
 

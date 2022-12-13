@@ -79,7 +79,7 @@ export default function UserDetails({target_user, project}) {
 
     const handleApprove = async () => {
         try {
-            var res = await axios.delete(`http://localhost:4000/api/requests/${received}`)
+            await axios.delete(`http://localhost:4000/api/requests/${received}`)
             setReceived("")
 
             var this_user_param = {
@@ -118,12 +118,12 @@ export default function UserDetails({target_user, project}) {
                 var tids = teams.data.data.user_ids
                 tids.push(target_user.user_id)
 
-                var p = {
+                var p_this = {
                     assignment_id: project._id,
                     user_ids: tids
                 }
 
-                await axios.put(`http://localhost:4000/api/teams/${this_team_id}`, p)
+                await axios.put(`http://localhost:4000/api/teams/${this_team_id}`, p_this)
 
             } else if (target_team_id !== "") {
                 var teams2 = await axios.get(`http://localhost:4000/api/teams/${this_team_id}`)

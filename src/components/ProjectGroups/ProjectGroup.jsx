@@ -7,29 +7,29 @@ import axios from 'axios'
 
 export default function ProjectGroup({project, setUser}) {
     const [userinfo, setUserInfo] = useState([])
-    const getIndividualInfo = async () => {
-        const params = {
-            assignment_id: project._id
-        }
-        const url = `http://localhost:4000/api/infos`
-        try {
-            const res = await axios.get(url, {params: {
-                where: JSON.stringify(params)
-            }});
-
-            if (res.status === 404) {
-                return null
-            }
-
-            const user_data = res.data.data
-            setUserInfo(user_data)
-        } catch(e) {
-            console.log(e)
-        }
-    }
     useEffect(()=> {
+        const getIndividualInfo = async () => {
+            const params = {
+                assignment_id: project._id
+            }
+            const url = `http://localhost:4000/api/infos`
+            try {
+                const res = await axios.get(url, {params: {
+                    where: JSON.stringify(params)
+                }});
+    
+                if (res.status === 404) {
+                    return null
+                }
+    
+                const user_data = res.data.data
+                setUserInfo(user_data)
+            } catch(e) {
+                console.log(e)
+            }
+        }
         getIndividualInfo()
-    }, [])
+    }, [project._id])
 
     useEffect(()=> {
         console.log("eff: ", userinfo)

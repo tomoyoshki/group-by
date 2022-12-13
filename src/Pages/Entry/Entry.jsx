@@ -8,7 +8,7 @@ import SignUp from '../Signup/SignUp';
 import Login from '../Login/Login';
 import ProjectBoard from '../ProjectBoard/ProjectBoard';
 import AddProject from '../AddProject/AddProject'
-import axios, { all } from 'axios';
+import axios from 'axios';
 
 function Entry() {
     const [allProjects, setAllProjects] = useState([])

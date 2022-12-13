@@ -74,7 +74,7 @@ export default function Users({user, setUser, project}) {
         var this_team_id = this_res.data.data[0].team_id
         var target_team_id = target_res.data.data[0].team_id
 
-        if (this_team_id === target_team_id) {
+        if (this_team_id !== "" && this_team_id === target_team_id) {
             setSameGoup(true)
         }
     }

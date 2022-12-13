@@ -148,8 +148,8 @@ export default function UserDetails({target_user, project}) {
         <div className="user_details">
             <div className="user_section">
             <div className="user_image"></div>
-            <div className="title">{target_user.user_id}</div>
-            <div className="description">{target_user.team_id}</div>
+            <div className="title">userId: {target_user.user_id.substr(0, 5) + target_user.user_id.substr(target_user.user_id.length - 5)}</div>
+            <div className="team">team: {target_user.team_id.substr(0, 5) + target_user.team_id.substr(target_user.team_id.length - 5)}</div>
         </div>
         <div className="user_description">
             <div className="wrapper">{target_user.description}</div>

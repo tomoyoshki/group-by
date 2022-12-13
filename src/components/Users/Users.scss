@@ -6,6 +6,7 @@
     box-shadow: 0px 4px 4px rgba(121, 121, 121, 0.19), 4px -1px 4px rgba(111, 111, 111, 0.07);
     backdrop-filter: blur(10px);
     /* Note: backdrop-filter has minimal browser support */
+    overflow-wrap: break-word;
 
     border-radius: 16px;
 
@@ -57,6 +58,7 @@
         flex-direction: column;
         width: 100%;
         height: calc(100% - 60px);
+        overflow-wrap: break-word;
         .user_column {
             display: flex;
             justify-content: space-evenly;
@@ -84,9 +86,12 @@
                 width: 65%;
                 display: flex;
                 // background-color: red;
+                overflow-wrap: break-word;
+                overflow: hidden;
                 justify-content: flex-start;
                 align-items: center;
                 font-size: 11px;
+                flex-wrap: wrap;
 
                 .skill {
                     margin-inline: 3px;
@@ -96,6 +101,12 @@
                     padding: 4px;
                     color: white;
                     border-radius: 5px;
+                    min-width: 40px;
+                    flex-wrap: wrap;
+                    margin-block: 3px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
                 }
             }
         }

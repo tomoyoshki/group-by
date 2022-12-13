@@ -45,7 +45,7 @@ export default function UserBoard() {
         <div className="user_board">
             <div className="user_section">
                 <div className="user_image"></div>
-                <div className="title">Test user</div>
+                <div className="title">{getToken() ? getToken().substr(0, 5) + getToken().substr(getToken().length - 5) : ""}</div>
                 <div className="user_action">
                     <span>setting</span>
                     <span onClick={()=>{handleSignout()}}>sign out</span>

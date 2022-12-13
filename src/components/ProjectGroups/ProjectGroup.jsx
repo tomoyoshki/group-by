@@ -46,7 +46,7 @@ export default function ProjectGroup({project, setUser}) {
             <div className='group_list'>
             {
                 userinfo.map((element) => {
-                    return <Users key={element.user_id} setUser={setUser} user={element} />
+                    return <Users key={element.user_id} setUser={setUser} user={element} project={project}/>
                 })
             }
             </div>

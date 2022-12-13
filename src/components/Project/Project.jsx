@@ -49,9 +49,7 @@ export default function Project({name, matched, assignment}) {
             <div className='project-info'>
                 {!matched ? (
                     <>
-                        <div>{assignment.join_code}</div>
-                        <div>40 found groups</div>
-                        <div>100 still looking for groups</div>
+                        <div className='code'>{assignment.join_code}</div>
                     </>
                 ) : (
                     <div></div>

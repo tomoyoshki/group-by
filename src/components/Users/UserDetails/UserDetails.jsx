@@ -27,13 +27,21 @@ export default function UserDetails({target_user, project}) {
 
     const getUser = async() => {
         try {
+            if (getToken() === target_user.user_id) {
+                setReceived("self")
+                return;
+            }
             const params = {
                 user_get_request: getToken(),
             };
 
             const res = await axios.get("http://localhost:4000/api/requests", {params: {
                 where : JSON.stringify(params)
-            }});
+            }}).catch(e => {});
+            if (res == null) {
+                setReceived("")
+                return
+            }
             if (res.status === 404) {
                 setReceived("")
                 console.log("ASDasdjioqwe")
@@ -50,7 +58,6 @@ export default function UserDetails({target_user, project}) {
                 }
             }
         } catch(e) {
-            console.log(e)
         }
     }
 
@@ -72,13 +79,63 @@ export default function UserDetails({target_user, project}) {
 
     const handleApprove = async () => {
         try {
-            const params = {
-                _id: received
-            }
-            console.log(params)
             var res = await axios.delete(`http://localhost:4000/api/requests/${received}`)
-            console.log(res)
             setReceived("")
+
+            var this_user_param = {
+                user_id: getToken(),
+                assignment_id: project._id
+            }
+
+            var target_user_param = {
+                user_id: target_user.user_id,
+                assignment_id: project._id
+            }
+
+            var this_res = await axios.get("http://localhost:4000/api/infos/", {params: {
+                where: JSON.stringify(this_user_param)
+            }})
+
+            var target_res = await axios.get("http://localhost:4000/api/infos/", {params: {
+                where: JSON.stringify(target_user_param)
+            }})
+
+            var this_team_id = this_res.data.data[0].team_id
+            var target_team_id = target_res.data.data[0].team_id
+
+            if (this_team_id === "" && target_team_id === "") {
+                var p = {
+                    assignment_id: project._id,
+                    user_ids: [getToken(), target_user.user_id]
+                }
+                await axios.post("http://localhost:4000/api/teams", p)
+            } else if (this_team_id !== "" && target_team_id !== "") {
+                alert("We do not approve two team compaction yet")
+            }else if (this_team_id !== "") {
+
+                // get the team and append the new user
+                var teams = await axios.get(`http://localhost:4000/api/teams/${this_team_id}`)
+                var tids = teams.data.data.user_ids
+                tids.push(target_user.user_id)
+
+                var p = {
+                    assignment_id: project._id,
+                    user_ids: tids
+                }
+
+                await axios.put(`http://localhost:4000/api/teams/${this_team_id}`, p)
+
+            } else if (target_team_id !== "") {
+                var teams2 = await axios.get(`http://localhost:4000/api/teams/${this_team_id}`)
+                var tids2 = teams2.data.data.user_ids
+                tids2.push(getToken())
+
+                var p2 = {
+                    assignment_id: project._id,
+                    user_ids: tids2
+                }
+                await axios.put(`http://localhost:4000/api/teams/${target_team_id}`, p2)
+            } 
         } catch(e) {
             console.log(e)
         }
@@ -92,7 +149,7 @@ export default function UserDetails({target_user, project}) {
             <div className="user_section">
             <div className="user_image"></div>
             <div className="title">{target_user.user_id}</div>
-            <div className="description"></div>
+            <div className="description">{target_user.team_id}</div>
         </div>
         <div className="user_description">
             <div className="wrapper">{target_user.description}</div>
@@ -108,7 +165,7 @@ export default function UserDetails({target_user, project}) {
         </div>
         { getRole() === "student" ? <div className="user_action">
         {
-            received !== "" ? <span onClick={handleApprove}>Approve Request</span> : <span onClick={handleOnclick}>Send Request</span>
+            received === "self" ? <></> : received !== "" ? <span onClick={handleApprove}>Approve Request</span> :  <span onClick={handleOnclick}>Send Request</span>
         }
         </div> : <></>
         }

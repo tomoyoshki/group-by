@@ -267,6 +267,7 @@ module.exports = function (router) {
             }
 
             // update request
+            console.log(request)
             let cur_get_user = await User.findOne({_id: request.user_get_request}, {}).catch(err => {})
             if (cur_get_user.recevied_request_ids.includes(request.user_get_request)) {
                 let cur_id_index = cur_get_user.recevied_request_ids.indexOf(request.user_get_request)

@@ -203,7 +203,7 @@ module.exports = function (router) {
                 return
             }
             // Teams cannot be created (or updated) without a assignment_id
-            if (req.body.assignment_id == null || req.body.name.assignment_id == 0) {
+            if (req.body.assignment_id == null || req.body.assignment_id == 0) {
                 res.status(404)
                 var response = {
                     message: "404: PUT can't updated without a name or a deadline",
@@ -223,7 +223,7 @@ module.exports = function (router) {
             // update related tables
             team.user_ids.forEach(async cur_user_id => {
                 // update related user info
-                let cur_user = await Team.findOne({_id: cur_user_id}, {}).catch(err => {})
+                let cur_user = await User.findOne({_id: cur_user_id}, {}).catch(err => {})
                 // delete from unmatched_assignment_ids
                 if (cur_user.unmatched_assignment_ids.includes(team.assignment_id)) {
                     let cur_id_index = cur_user.unmatched_assignment_ids.indexOf(team.assignment_id)
@@ -253,6 +253,7 @@ module.exports = function (router) {
             return
         } catch(err) {
             // catch server error
+            console.log(err)
             res.status(500)
             var response = {
                 message: "PUT: 500 server error",
